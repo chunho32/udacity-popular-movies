@@ -24,7 +24,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public final class Video implements Parcelable {
+public final class  Video implements Parcelable {
 
     public static final String SITE_YOUTUBE = "YouTube";
     public static final String TYPE_TRAILER = "Trailer";

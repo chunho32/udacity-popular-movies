@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://repos.zeroturnaround.com/nexus/content/repositories/zt-public-releases' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'me.tatarka:gradle-retrolambda:3.2.0'
     }
 }

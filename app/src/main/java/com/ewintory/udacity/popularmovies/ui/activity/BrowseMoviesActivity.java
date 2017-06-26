@@ -62,7 +62,7 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_movies);
 
-        mTwoPane = findViewById(R.id.movie_details_container) != null;
+        mTwoPane = false;//findViewById(R.id.movie_details_container) != null;
 
         mMode = (savedInstanceState != null) ?
                 savedInstanceState.getString(STATE_MODE, Sort.POPULARITY.toString())
