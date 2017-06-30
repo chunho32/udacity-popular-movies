@@ -53,6 +53,12 @@
             android:label="@string/title_settings"
             android:parentActivityName=".ui.activity.BrowseMoviesActivity" />
 
+        <activity
+            android:name=".ui.activity.MyPlayerActivity"
+            android:label="Player Activity"
+            android:configChanges="orientation|keyboardHidden|screenLayout|screenSize"
+            android:theme="@style/Theme.PopularMovies.MyPlayer" />   <!-- Don't need to set the theme here if it's set on your <application /> tag already -->
+
         <provider
             android:name=".data.provider.MoviesProvider"
             android:authorities="@string/content_authority"

@@ -25,6 +25,7 @@ import com.ewintory.udacity.popularmovies.R;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.data.model.Video;
 import com.ewintory.udacity.popularmovies.data.repository.MoviesRepository;
+import com.ewintory.udacity.popularmovies.ui.activity.MyPlayerActivity;
 import com.ewintory.udacity.popularmovies.utils.PrefUtils;
 
 import rx.Observable;
@@ -60,10 +61,12 @@ public class MoviesHelper {
     }
 
     public void playVideo(Video video) {
-        if (video.getSite().equals(Video.SITE_YOUTUBE))
-            mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + video.getKey())));
-        else
-            Timber.w("Unsupported video format");
+        Intent intent = new Intent(mActivity, MyPlayerActivity.class);
+        mActivity.startActivity(intent);
+//        if (video.getSite().equals(Video.SITE_YOUTUBE))
+//            mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + video.getKey())));
+//        else
+//            Timber.w("Unsupported video format");
     }
 
     public void shareTrailer(int messageTemplateResId, Video video) {

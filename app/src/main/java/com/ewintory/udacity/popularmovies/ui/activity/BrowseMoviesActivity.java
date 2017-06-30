@@ -77,9 +77,17 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-//                if (tabId == R.id.tab_favorites) {
-//                    // The tab with id R.id.tab_favorites was selected,
-//                    // change your content accordingly.
+                if (tabId == R.id.tab_favorite) {
+                    onModeSelected(MODE_FAVORITES);
+                }
+                else if (tabId == R.id.tab_home) {
+                    onModeSelected(Sort.POPULARITY.toString());
+                }
+//                else if (tabId == R.id.tab_home) {
+//                    onModeSelected(Sort.VOTE_COUNT.toString());
+//                }
+//                else if (tabId == R.id.tab_home) {
+//                    onModeSelected(Sort.VOTE_AVERAGE.toString());
 //                }
             }
         });
