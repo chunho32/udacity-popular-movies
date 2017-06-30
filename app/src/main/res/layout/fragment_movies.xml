@@ -14,18 +14,17 @@
   limitations under the License.
   -->
 
-<com.ewintory.udacity.popularmovies.ui.widget.MultiSwipeRefreshLayout
-    android:id="@+id/multi_swipe_refresh_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ewintory.udacity.popularmovies.ui.widget.MultiSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/multi_swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <com.ewintory.udacity.popularmovies.ui.widget.BetterViewAnimator
         android:id="@+id/movies_animator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:inAnimation="@android:anim/fade_in"
         android:outAnimation="@android:anim/fade_out">
 

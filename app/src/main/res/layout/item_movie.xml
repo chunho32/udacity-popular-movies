@@ -14,15 +14,13 @@
   limitations under the License.
   -->
 
-<android.support.v7.widget.CardView
-    android:id="@+id/movie_item_container"
-    style="@style/MovieItem"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/movie_item_container"
+    style="@style/MovieItem"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout_margin="@dimen/item_spacing_full">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -32,7 +30,7 @@
         <com.ewintory.udacity.popularmovies.ui.widget.AspectLockedImageView
             android:id="@+id/movie_item_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@string/movie_image_desc"
             android:scaleType="centerCrop"
@@ -47,16 +45,15 @@
             android:layout_height="wrap_content"
             android:background="@color/theme_primary"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/keyline_1"
-                android:layout_marginLeft="@dimen/keyline_1"
-                android:layout_marginStart="@dimen/keyline_1"
-                android:layout_marginTop="@dimen/keyline_1"
-                android:layout_weight="1"
+                android:layout_marginBottom="@dimen/keyline_1_minus_8dp"
+                android:layout_marginLeft="@dimen/keyline_1_minus_8dp"
+                android:layout_marginStart="@dimen/keyline_1_minus_8dp"
+                android:layout_marginTop="@dimen/keyline_1_minus_8dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -64,7 +61,7 @@
                     style="@style/MovieItemText"
                     android:lines="1"
                     android:textColor="@color/body_text_white"
-                    android:textSize="@dimen/text_size_large"
+                    android:textSize="@dimen/text_size_medium"
                     android:textStyle="bold"
                     tools:text="Jurassic World" />
 
@@ -72,18 +69,18 @@
                     android:id="@+id/movie_item_genres"
                     style="@style/MovieItemText"
                     android:textColor="@color/body_text_1_inverse"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="Action" />
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/movie_item_btn_favorite"
-                style="@style/FavoriteButton"
-                android:contentDescription="@string/movie_item_btn_favorite_desc" />
+
 
         </LinearLayout>
 
     </LinearLayout>
-
+    <ImageButton
+        android:id="@+id/movie_item_btn_favorite"
+        style="@style/FavoriteButton"
+        android:contentDescription="@string/movie_item_btn_favorite_desc" />
 </android.support.v7.widget.CardView>
