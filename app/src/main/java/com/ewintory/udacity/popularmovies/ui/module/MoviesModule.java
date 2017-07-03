@@ -19,6 +19,7 @@ package com.ewintory.udacity.popularmovies.ui.module;
 
 import com.ewintory.udacity.popularmovies.ApplicationModule;
 import com.ewintory.udacity.popularmovies.ui.fragment.FavoredMoviesFragment;
+import com.ewintory.udacity.popularmovies.ui.fragment.LeftMenuFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.MovieFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.SortedMoviesFragment;
 
@@ -28,7 +29,8 @@ import dagger.Module;
         injects = {
                 SortedMoviesFragment.class,
                 FavoredMoviesFragment.class,
-                MovieFragment.class
+                MovieFragment.class,
+                LeftMenuFragment.class
         },
         addsTo = ApplicationModule.class
 )

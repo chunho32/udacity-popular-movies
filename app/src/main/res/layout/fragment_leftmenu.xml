@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/movie_poster_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/genres_icon"/>
 
     <TextView
         android:id="@+id/id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/MovieItemText"
+        android:lines="1"
+        android:textColor="@color/body_text_white"
+        android:textSize="@dimen/text_size_large"
+        android:textStyle="bold"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/MovieItemText"
+        android:lines="1"
+        android:layout_marginRight="@dimen/spinner_drawable_padding"
+        android:textColor="@color/body_text_white"
+        android:textSize="@dimen/text_size_xlarge"
+        android:textStyle="bold"
         android:textAppearance="?attr/textAppearanceListItem" />
+
+
 </LinearLayout>

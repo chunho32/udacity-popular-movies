@@ -47,13 +47,13 @@ import android.widget.TextView;
 
 import com.ewintory.udacity.popularmovies.R;
 import com.ewintory.udacity.popularmovies.data.api.Sort;
+import com.ewintory.udacity.popularmovies.data.model.Genre;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.ui.fragment.FavoredMoviesFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.LeftMenuFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.MovieFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.MoviesFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.SortedMoviesFragment;
-import com.ewintory.udacity.popularmovies.ui.fragment.dummy.DummyContent;
 import com.ewintory.udacity.popularmovies.utils.PrefUtils;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
@@ -278,8 +278,8 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
+    public void onListFragmentInteraction(Genre item) {
+        
     }
 
     private class ModeSpinnerItem {
