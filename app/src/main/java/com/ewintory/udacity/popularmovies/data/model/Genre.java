@@ -76,7 +76,10 @@ public class Genre implements Parcelable, GenreMeta {
     }
 
     public static final Creator<Genre> CREATOR = new Creator<Genre>() {
-        public Genre createFromParcel(Parcel source) {return new Genre(source);}
+        public Genre createFromParcel(Parcel source)
+        {
+            return new Genre(source);
+        }
 
         public Genre[] newArray(int size) {return new Genre[size];}
     };

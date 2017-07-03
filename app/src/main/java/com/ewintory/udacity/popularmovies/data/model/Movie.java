@@ -258,7 +258,10 @@ public final class Movie implements Parcelable, MovieMeta {
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        public Movie createFromParcel(Parcel source) {return new Movie(source);}
+        public Movie createFromParcel(Parcel source)
+        {
+            return new Movie(source);
+        }
 
         public Movie[] newArray(int size) {return new Movie[size];}
     };

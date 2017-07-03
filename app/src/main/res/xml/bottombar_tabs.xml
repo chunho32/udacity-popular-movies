@@ -2,17 +2,18 @@
     <tab
         id="@+id/tab_home"
         icon="@drawable/ic_home"
-        title="Home" />
+        title="Home"
+        barColorWhenSelected="#ff01579b"/>
     <tab
         id="@+id/tab_Genres"
         icon="@drawable/ic_video_library"
         title="Genres"
-        barColorWhenSelected="#5D4037"/>
+        barColorWhenSelected="#ff4e342e"/>
     <tab
         id="@+id/tab_news"
         icon="@drawable/ic_movie_filter"
         title="New"
-        barColorWhenSelected="#7B1FA2"/>
+        barColorWhenSelected="#ff006064"/>
     <!--<tab-->
         <!--id="@+id/tab_search"-->
         <!--icon="@drawable/ic_search"-->
@@ -27,5 +28,5 @@
         id="@+id/tab_favorite"
         icon="@drawable/ic_favorite"
         title="Favorites"
-        barColorWhenSelected="#FF9800"/>
+        barColorWhenSelected="#fffb8c00"/>
 </tabs>

@@ -27,6 +27,21 @@
         <item name="photoItemForeground">?android:selectableItemBackground</item>
     </style>
 
+    <style name="OverlayPrimaryColorRed">
+        <item name="colorPrimary">@color/material_red500</item>
+        <item name="colorPrimaryDark">@color/material_red700</item>
+    </style>
+
+    <style name="OverlayPrimaryColorGreen">
+        <item name="colorPrimary">@color/material_green500</item>
+        <item name="colorPrimaryDark">@color/material_green700</item>
+    </style>
+
+    <style name="OverlayPrimaryColorBlue">
+        <item name="colorPrimary">@color/material_blue500</item>
+        <item name="colorPrimaryDark">@color/material_blue700</item>
+    </style>
+
     <style name="Theme.PopularMovies" parent="Theme.PopularMovies.Base" />
 
     <style name="Theme.PopularMovies.BrowseMovies"/>
@@ -40,5 +55,6 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
+
 
 </resources>

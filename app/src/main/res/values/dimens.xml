@@ -61,5 +61,6 @@
     <dimen name="flexible_space_image_height">300dp</dimen>
     <item name="match_parent" type="dimen">-1</item>
     <item name="wrap_content" type="dimen">-2</item>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>
