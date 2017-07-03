@@ -61,6 +61,9 @@ public final class UiUtils {
     }
 
     public static String joinGenres(List<Genre> genres, String delimiter, @NonNull StringBuilder builder) {
+
+        if(genres == null) return "";
+
         builder.setLength(0);
         if (!Lists.isEmpty(genres))
             for (Genre genre : genres) {

@@ -143,9 +143,10 @@ final class MoviesRepositoryImpl implements MoviesRepository {
             List<Integer> genreIds = movie.getGenreIds();
             if (Lists.isEmpty(genreIds)) continue;
 
-            List<Genre> genres = new ArrayList<>(genreIds.size());
+            List<Genre> genres = new ArrayList<>();
             for (Integer id : genreIds)
-                genres.add(genreMap.get(id));
+                if(genreMap.get(id) != null)
+                    genres.add(genreMap.get(id));
             movie.setGenres(genres);
         }
         return movies;

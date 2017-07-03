@@ -68,7 +68,7 @@
         <!-- Details -->
         <LinearLayout
             android:layout_width="@dimen/movie_details_responsive_width"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@id/anchor"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/movie_details_content_margin_bottom"
@@ -140,6 +140,20 @@
                         android:textColor="@color/body_text_2"
                         android:textSize="@dimen/text_size_medium"
                         tools:text="Rating: 8/10" />
+
+                    <Button
+                        android:id="@+id/trailer_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Trailer"
+                        tools:background="@drawable/line_divider" />
+
+                    <ImageButton
+                        android:id="@+id/view_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:drawable/screen_background_light_transparent"
+                        app:srcCompat="@drawable/ic_play_circle_filled_black_48dp" />
 
                 </LinearLayout>
 

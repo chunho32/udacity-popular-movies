@@ -29,6 +29,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -78,6 +79,9 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
     @Bind(R.id.movie_poster_play) ImageView mPosterPlayImage;
     @Bind(R.id.movie_cover) ImageView mCoverImage;
     @Bind(R.id.movie_cover_container) FrameLayout mCoverContainer;
+
+    @Bind(R.id.trailer_button) Button mTrailerBtn;
+    @Bind(R.id.view_button) ImageButton mViewBtn;
 
     @Bind(R.id.movie_favorite_button) ImageButton mFavoriteButton;
     @Bind(R.id.movie_title) TextView mTitle;
@@ -327,6 +331,12 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
 
                     mCoverContainer.setTag(video);
                     mCoverContainer.setOnClickListener(view -> mHelper.playVideo((Video) view.getTag()));
+
+                    mTrailerBtn.setTag(video);
+                    mTrailerBtn.setOnClickListener(view -> mHelper.playTrailer((Video) view.getTag()));
+
+                    mViewBtn.setTag(video);
+                    mViewBtn.setOnClickListener(view -> mHelper.playVideo((Video) view.getTag()));
                     break;
                 }
 

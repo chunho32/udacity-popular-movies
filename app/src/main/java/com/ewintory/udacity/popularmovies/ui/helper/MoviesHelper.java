@@ -68,7 +68,13 @@ public class MoviesHelper {
 //        else
 //            Timber.w("Unsupported video format");
     }
-
+    public void playTrailer(Video video)
+    {
+        if (video.getSite().equals(Video.SITE_YOUTUBE))
+            mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + video.getKey())));
+        else
+            Timber.w("Unsupported video format");
+    }
     public void shareTrailer(int messageTemplateResId, Video video) {
         mActivity.startActivity(Intent.createChooser(
                 createShareIntent(messageTemplateResId, video.getName(), video.getKey()),
