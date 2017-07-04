@@ -125,7 +125,7 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
                     }
                 }
                 else if (tabId == R.id.tab_news) {
-                    onModeSelected(Sort.VOTE_AVERAGE.toString());
+                    onModeSelected(Sort.REVENUE.toString());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         Window window = getWindow();
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

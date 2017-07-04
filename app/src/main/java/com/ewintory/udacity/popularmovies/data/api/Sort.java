@@ -21,9 +21,10 @@ import java.io.Serializable;
 public enum Sort implements Serializable {
 
     POPULARITY("popularity.desc"),
-    VOTE_AVERAGE("vote_average.desc"),
-    VOTE_COUNT("vote_count.desc");
-
+    VOTE_AVERAGE("vote_average.asc"),
+    VOTE_COUNT("vote_count.desc"),
+    RELEASE_DATE("primary_release_date.desc"),
+    REVENUE("revenue.desc");
     private final String value;
 
     Sort(String value) {
