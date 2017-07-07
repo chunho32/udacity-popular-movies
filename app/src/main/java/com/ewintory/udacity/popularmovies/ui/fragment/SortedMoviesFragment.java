@@ -18,6 +18,7 @@ package com.ewintory.udacity.popularmovies.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.widget.Toast;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 import com.ewintory.udacity.popularmovies.R;
 import com.ewintory.udacity.popularmovies.data.api.Sort;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
+import com.ewintory.udacity.popularmovies.ui.activity.BrowseMoviesActivity;
+import com.ewintory.udacity.popularmovies.ui.activity.MovieDetailsActivity;
 import com.ewintory.udacity.popularmovies.ui.listener.EndlessScrollListener;
 
 import java.util.List;
@@ -36,6 +39,8 @@ import timber.log.Timber;
 
 public final class SortedMoviesFragment extends MoviesFragment implements EndlessScrollListener.OnLoadMoreCallback {
     private static final String ARG_SORT = "state_sort";
+    private static final String ARG_GENREID = "state_genreID";
+    private static final String ARG_GENRE_NAME = "state_genreID_Name";
 
     private static final String STATE_CURRENT_PAGE = "state_current_page";
     private static final String STATE_IS_LOADING = "state_is_loading";
@@ -46,13 +51,26 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
     private BehaviorSubject<Observable<List<Movie>>> mItemsObservableSubject = BehaviorSubject.create();
 
     private Sort mSort;
+    private int mGenre = -1;
+    private String mGenreName = "noname";
     private int mCurrentPage = 0;
     private boolean mIsLoading = false;
 
     public static SortedMoviesFragment newInstance(@NonNull Sort sort) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_SORT, sort);
+        args.putInt(ARG_GENREID, -1);
+        SortedMoviesFragment fragment = new SortedMoviesFragment();
+        fragment.setArguments(args);
 
+
+        return fragment;
+    }
+
+    public static SortedMoviesFragment newInstance(@NonNull int genreID,@NonNull String name) {
+        Bundle args = new Bundle();
+        args.putInt(ARG_GENREID, genreID);
+        args.putString(ARG_GENRE_NAME, name);
         SortedMoviesFragment fragment = new SortedMoviesFragment();
         fragment.setArguments(args);
         return fragment;
@@ -62,8 +80,27 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mSort = (Sort) getArguments().getSerializable(ARG_SORT);
 
+
+
+        mSort = (Sort) getArguments().getSerializable(ARG_SORT);
+        mGenre = (int)getArguments().getInt(ARG_GENREID);
+        mGenreName = (String)getArguments().getString(ARG_GENRE_NAME);
+
+        trySetupToolbar();
+        if(mGenre >= 0)
+        {
+            if (mToolbar != null) {
+                ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+                mToolbar.setTitle(mGenreName);
+            }
+        }
+        else
+        {
+            if (mToolbar != null) {
+                ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+            }
+        }
         if (savedInstanceState != null) {
             mCurrentPage = savedInstanceState.getInt(STATE_CURRENT_PAGE, 0);
             mIsLoading = savedInstanceState.getBoolean(STATE_IS_LOADING, true);
@@ -89,8 +126,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                         }
                     }
                 }));
-
-        subscribeToMovies();
+            subscribeToMovies();
         if (savedInstanceState == null)
             reloadContent();
     }
@@ -101,6 +137,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
         outState.putInt(STATE_CURRENT_PAGE, mCurrentPage);
         outState.putBoolean(STATE_IS_LOADING, mIsLoading);
         outState.putSerializable(ARG_SORT, mSort);
+        outState.putSerializable(ARG_GENREID, mGenre);
     }
 
     @Override
@@ -156,9 +193,11 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
 
     private void pullPage(int page) {
         Timber.d(String.format("Page %d is loading.", page));
-        mItemsObservableSubject.onNext(mMoviesRepository.discoverMovies(mSort, page));
+        if(mGenre == -1)
+            mItemsObservableSubject.onNext(mMoviesRepository.discoverMovies(mSort, page));
+        else
+            mItemsObservableSubject.onNext(mMoviesRepository.discoverMoviesByGenre(mGenre,page));
     }
-
 
     @Override
     protected void initRecyclerView() {

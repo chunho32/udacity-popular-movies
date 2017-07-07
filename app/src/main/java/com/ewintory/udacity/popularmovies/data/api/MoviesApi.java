@@ -35,6 +35,10 @@ public interface MoviesApi {
             @Query("sort_by") Sort sort,
             @Query("page") int page);
 
+    @GET("/discover/movie_by_genres") Observable<Movie.Response> discoverMoviesByGenre(
+            @Query("genreID") int genreID,
+            @Query("page") int page);
+
     @GET("/discover/movie") Observable<Movie.Response> discoverMovies(
             @Query("sort_by") Sort sort,
             @Query("page") int page,

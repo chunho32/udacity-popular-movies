@@ -75,6 +75,22 @@ final class MoviesRepositoryImpl implements MoviesRepository {
     }
 
     @Override
+    public Observable<List<Movie>> discoverMoviesByGenre(int genreID,int page) {
+        return mMoviesApi.discoverMoviesByGenre(genreID,page)
+                .timeout(5, TimeUnit.SECONDS)
+                .retry(2)
+                .map(response -> response.movies)
+                .withLatestFrom(getSavedMovieIds(), (movies, favoredIds) -> {
+                    for (Movie movie : movies)
+                        movie.setFavored(favoredIds.contains(movie.getId()));
+                    return movies;
+                })
+                .withLatestFrom(getGenresMap(), GENRES_MAPPER)
+                .subscribeOn(Schedulers.io());
+    }
+
+
+    @Override
     public Observable<List<Movie>> savedMovies() {
         return mBriteContentResolver.createQuery(Movies.CONTENT_URI, Movie.PROJECTION, null, null, Movies.DEFAULT_SORT, true)
                 .map(Movie.PROJECTION_MAP)

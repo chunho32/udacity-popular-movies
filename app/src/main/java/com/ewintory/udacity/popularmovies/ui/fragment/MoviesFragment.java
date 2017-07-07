@@ -20,10 +20,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,8 @@ import android.view.ViewGroup;
 import com.ewintory.udacity.popularmovies.R;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.data.repository.MoviesRepository;
+import com.ewintory.udacity.popularmovies.ui.activity.BrowseMoviesActivity;
+import com.ewintory.udacity.popularmovies.ui.activity.MovieDetailsActivity;
 import com.ewintory.udacity.popularmovies.ui.adapter.MoviesAdapter;
 import com.ewintory.udacity.popularmovies.ui.helper.MoviesHelper;
 import com.ewintory.udacity.popularmovies.ui.module.MoviesModule;
@@ -74,6 +78,16 @@ public abstract class MoviesFragment extends BaseFragment implements
     protected GridLayoutManager mGridLayoutManager;
     protected CompositeSubscription mSubscriptions;
     protected int mSelectedPosition = -1;
+
+    @Nullable
+    public Toolbar mToolbar;
+
+    protected void trySetupToolbar() {
+        if (getActivity() instanceof BrowseMoviesActivity) {
+            BrowseMoviesActivity activity = ((BrowseMoviesActivity) getActivity());
+            mToolbar = activity.getToolbar();
+        }
+    }
 
     @Override
     public void onAttach(Activity activity) {

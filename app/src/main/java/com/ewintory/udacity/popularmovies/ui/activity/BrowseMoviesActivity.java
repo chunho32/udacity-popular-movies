@@ -21,10 +21,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -39,9 +38,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -56,7 +53,6 @@ import com.ewintory.udacity.popularmovies.ui.fragment.MoviesFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.SortedMoviesFragment;
 import com.ewintory.udacity.popularmovies.utils.PrefUtils;
 import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
@@ -66,7 +62,7 @@ import java.util.List;
 import timber.log.Timber;
 
 public final class BrowseMoviesActivity extends BaseActivity implements MoviesFragment.Listener , LeftMenuFragment.OnListFragmentInteractionListener {
-    private static final String STATE_MODE = "state_mode";
+    private static final String SORT_MODE = "state_mode";
 
     private static final String MOVIES_FRAGMENT_TAG = "fragment_movies";
     private static final String MOVIE_DETAILS_FRAGMENT_TAG = "fragment_movie_details";
@@ -75,8 +71,9 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
 
     private ModeSpinnerAdapter mSpinnerAdapter = new ModeSpinnerAdapter();
     private MoviesFragment mMoviesFragment;
-    private String mMode;
+    private String mSortMode;
     private boolean mTwoPane;
+
 
     private DrawerLayout mDrawerLayout;
     private LinearLayout mDrawerList;
@@ -89,8 +86,8 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
 
         mTwoPane = false;//findViewById(R.id.movie_details_container) != null;
 
-        mMode = (savedInstanceState != null) ?
-                savedInstanceState.getString(STATE_MODE, Sort.POPULARITY.toString())
+        mSortMode = (savedInstanceState != null) ?
+                savedInstanceState.getString(SORT_MODE, Sort.POPULARITY.toString())
                 : PrefUtils.getBrowseMoviesMode(this);
 
         //initModeSpinner();
@@ -98,16 +95,7 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                if (tabId == R.id.tab_favorite) {
-                    onModeSelected(MODE_FAVORITES);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = getWindow();
-                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        window.setStatusBarColor(Color.parseColor("#fffb8c00"));
-                    }
-                }
-                else if (tabId == R.id.tab_home) {
+                if (tabId == R.id.tab_home) {
                     onModeSelected(Sort.POPULARITY.toString());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         Window window = getWindow();
@@ -116,8 +104,8 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
                     }
                 }
                 else if (tabId == R.id.tab_Genres) {
-                    onModeSelected(Sort.VOTE_COUNT.toString());
-                    mDrawerLayout.openDrawer(Gravity.LEFT);
+                    onGenresTabSelected(28,"Action");
+                    //mDrawerLayout.openDrawer(Gravity.LEFT);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         Window window = getWindow();
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -132,13 +120,34 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
                         window.setStatusBarColor(Color.parseColor("#ff006064"));
                     }
                 }
+                else if (tabId == R.id.tab_favorite) {
+                    onFavoriteTabSelected();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(Color.parseColor("#fffb8c00"));
+                    }
+                }
             }
         });
+
         if (mToolbar != null) {
-            getSupportActionBar().hide();
+            ViewCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.toolbar_elevation));
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDrawerLayout.openDrawer(Gravity.LEFT);
+                }
+            });
+
+            ActionBar ab = getSupportActionBar();
+            if (ab != null) {
+                ab.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+                ab.setDisplayHomeAsUpEnabled(true);
+                ab.setDisplayShowHomeEnabled(true);
+            }
         }
-
-
         //left menu
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         createGenresFragment(new LeftMenuFragment());
@@ -150,9 +159,9 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
 
         mMoviesFragment = (MoviesFragment) getSupportFragmentManager().findFragmentByTag(MOVIES_FRAGMENT_TAG);
         if (mMoviesFragment == null)
-            replaceMoviesFragment(mMode.equals(MODE_FAVORITES)
+            replaceMoviesFragment(mSortMode.equals(MODE_FAVORITES)
                     ? new FavoredMoviesFragment()
-                    : SortedMoviesFragment.newInstance(Sort.fromString(mMode)));
+                    : SortedMoviesFragment.newInstance(Sort.fromString(mSortMode)));
     }
 
     @Override
@@ -180,12 +189,12 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(STATE_MODE, mMode);
+        outState.putString(SORT_MODE, mSortMode);
     }
 
     @Override
     protected void onPause() {
-        PrefUtils.setBrowseMoviesMode(this, mMode);
+        PrefUtils.setBrowseMoviesMode(this, mSortMode);
         super.onPause();
     }
 
@@ -239,13 +248,13 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
 
         int itemToSelect = -1;
 
-        if (mMode.equals(MODE_FAVORITES))
+        if (mSortMode.equals(MODE_FAVORITES))
             itemToSelect = 0;
-        else if (mMode.equals(Sort.POPULARITY.toString()))
+        else if (mSortMode.equals(Sort.POPULARITY.toString()))
             itemToSelect = 2;
-        else if (mMode.equals(Sort.VOTE_COUNT.toString()))
+        else if (mSortMode.equals(Sort.VOTE_COUNT.toString()))
             itemToSelect = 3;
-        else if (mMode.equals(Sort.VOTE_AVERAGE.toString()))
+        else if (mSortMode.equals(Sort.VOTE_AVERAGE.toString()))
             itemToSelect = 4;
 
         View spinnerContainer = LayoutInflater.from(this).inflate(R.layout.widget_toolbar_spinner, toolbar, false);
@@ -268,18 +277,23 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
     }
 
     private void onModeSelected(String mode) {
-        if (mode.equals(mMode)) return;
-        mMode = mode;
+        mSortMode = mode;
+        replaceMoviesFragment(SortedMoviesFragment.newInstance(Sort.fromString(mSortMode)));
+    }
 
-        if (mMode.equals(MODE_FAVORITES))
-            replaceMoviesFragment(new FavoredMoviesFragment());
-        else
-            replaceMoviesFragment(SortedMoviesFragment.newInstance(Sort.fromString(mMode)));
+    private void onFavoriteTabSelected()
+    {
+        replaceMoviesFragment(new FavoredMoviesFragment());
+    }
+    private void onGenresTabSelected(int genre,String name)
+    {
+        replaceMoviesFragment(SortedMoviesFragment.newInstance(genre,name));
     }
 
     @Override
     public void onListFragmentInteraction(Genre item) {
-        
+        onGenresTabSelected(item.getId(),item.getName());
+        mDrawerLayout.closeDrawers();
     }
 
     private class ModeSpinnerItem {

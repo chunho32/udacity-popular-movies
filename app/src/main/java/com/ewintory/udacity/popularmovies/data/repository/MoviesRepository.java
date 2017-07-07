@@ -38,6 +38,8 @@ public interface MoviesRepository {
 
     Observable<List<Movie>> discoverMovies(Sort sort, int page);
 
+    Observable<List<Movie>> discoverMoviesByGenre(int genreID,int page);
+
     Observable<List<Movie>> savedMovies();
 
     Observable<Set<Long>> savedMovieIds();
