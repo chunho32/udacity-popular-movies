@@ -31,7 +31,7 @@
     <dimen name="text_size_diff_large_small">6sp</dimen>
 
     <!-- Toolbar -->
-    <dimen name="toolbar_elevation">8dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
 
     <!-- Browse Movies -->
     <item name="movie_item_image_aspect_ratio" format="float" type="dimen">.675</item>

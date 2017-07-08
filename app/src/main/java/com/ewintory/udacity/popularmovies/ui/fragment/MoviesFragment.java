@@ -136,6 +136,13 @@ public abstract class MoviesFragment extends BaseFragment implements
     @Override
     public void onDestroyView() {
         mSubscriptions.unsubscribe();
+
+        if (mSwipeRefreshLayout!=null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.destroyDrawingCache();
+            mSwipeRefreshLayout.clearAnimation();
+        }
+
         super.onDestroyView();
     }
 
@@ -143,6 +150,7 @@ public abstract class MoviesFragment extends BaseFragment implements
     public void onDetach() {
         listener = (movie, view) -> {};
         mMoviesAdapter.setListener(MoviesAdapter.OnMovieClickListener.DUMMY);
+
         super.onDetach();
     }
 

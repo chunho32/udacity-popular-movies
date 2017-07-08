@@ -16,7 +16,9 @@
 
 package com.ewintory.udacity.popularmovies.ui.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,6 +31,7 @@ import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.ui.activity.BrowseMoviesActivity;
 import com.ewintory.udacity.popularmovies.ui.activity.MovieDetailsActivity;
 import com.ewintory.udacity.popularmovies.ui.listener.EndlessScrollListener;
+import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 
 import java.util.List;
 
@@ -79,10 +82,6 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-
-
         mSort = (Sort) getArguments().getSerializable(ARG_SORT);
         mGenre = (int)getArguments().getInt(ARG_GENREID);
         mGenreName = (String)getArguments().getString(ARG_GENRE_NAME);
@@ -142,7 +141,6 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
 
     @Override
     public void onDestroyView() {
-        mSubscriptions.unsubscribe();
         super.onDestroyView();
     }
 

@@ -52,6 +52,7 @@ import com.ewintory.udacity.popularmovies.ui.fragment.MovieFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.MoviesFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.SortedMoviesFragment;
 import com.ewintory.udacity.popularmovies.utils.PrefUtils;
+import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -134,6 +135,7 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
 
         if (mToolbar != null) {
             ViewCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.toolbar_elevation));
+            mToolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(0.5f,getResources().getColor(R.color.theme_primary) ));
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -141,10 +143,11 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
                 }
             });
 
+            mToolbar.setNavigationIcon(R.drawable.genre_list);
             ActionBar ab = getSupportActionBar();
             if (ab != null) {
                 ab.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-                ab.setDisplayHomeAsUpEnabled(true);
+                //ab.setDisplayHomeAsUpEnabled(true);
                 ab.setDisplayShowHomeEnabled(true);
             }
         }
