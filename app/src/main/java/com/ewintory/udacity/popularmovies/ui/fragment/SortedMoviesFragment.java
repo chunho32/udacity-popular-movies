@@ -21,7 +21,9 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,10 +32,16 @@ import com.ewintory.udacity.popularmovies.data.api.Sort;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.ui.activity.BrowseMoviesActivity;
 import com.ewintory.udacity.popularmovies.ui.activity.MovieDetailsActivity;
+import com.ewintory.udacity.popularmovies.ui.adapter.MoviesAdapter;
 import com.ewintory.udacity.popularmovies.ui.listener.EndlessScrollListener;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -50,6 +58,8 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
 
     private static final int VISIBLE_THRESHOLD = 10;
 
+    private int mCurrentAdLoadedID = 0;
+
     private EndlessScrollListener mEndlessScrollListener;
     private BehaviorSubject<Observable<List<Movie>>> mItemsObservableSubject = BehaviorSubject.create();
 
@@ -59,6 +69,9 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
     private int mCurrentPage = 0;
     private boolean mIsLoading = false;
 
+    private boolean first_movie_loaded = false;
+    private boolean isLoadingAds = false;
+    private int mMaxPage = 0;
     public static SortedMoviesFragment newInstance(@NonNull Sort sort) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_SORT, sort);
@@ -171,13 +184,34 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                 .subscribe(movies -> {
                     mSwipeRefreshLayout.setRefreshing(false);
                     mCurrentPage++;
+                    if(mMaxPage > mCurrentPage)
+                        mMaxPage = mCurrentPage;
 
                     Timber.d(String.format("Page %d is loaded, %d new items", mCurrentPage, movies.size()));
                     if (mCurrentPage == 1) mMoviesAdapter.clear();
 
                     mMoviesAdapter.setLoadMore(!movies.isEmpty());
-                    mMoviesAdapter.add(movies);
+                    for(int i = 0 ; i < movies.size(); i++)
+                    {
+                        if(mMoviesAdapter.getItems().size() % MoviesAdapter.ITEMS_PER_AD == 0)
+                        {
+                            final NativeExpressAdView adView = new NativeExpressAdView(getActivity());
+                            mMoviesAdapter.addAd(mMoviesAdapter.getItems().size(),adView);
+
+                            Movie adMarkMovie = new Movie();
+                            adMarkMovie.setId(-1000);
+                            mMoviesAdapter.add(adMarkMovie);
+                        }
+                        mMoviesAdapter.add(movies.get(i));
+                    }
+
                     mViewAnimator.setDisplayedChildId(ANIMATOR_VIEW_CONTENT);
+
+                    if(mCurrentPage >= mMaxPage && !isLoadingAds && mCurrentAdLoadedID < mMoviesAdapter.mAdItems.size())
+                    {
+                        setUpAndLoadNativeExpressAds(mCurrentAdLoadedID);
+                    }
+
                 }, throwable -> {
                     Timber.e(throwable, "Movies loading failed.");
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -188,6 +222,84 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                         mViewAnimator.setDisplayedChildId(ANIMATOR_VIEW_ERROR);
                 }));
     }
+    private void setUpAndLoadNativeExpressAds(int currentAdLoadedID) {
+        // Use a Runnable to ensure that the RecyclerView has been laid out before setting the
+        // ad size for the Native Express ad. This allows us to set the Native Express ad's
+        // width to match the full width of the RecyclerView.
+        isLoadingAds = true;
+        mRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                final float scale = getActivity().getResources().getDisplayMetrics().density;
+                // Set the ad size and ad unit ID for each Native Express ad in the items list.
+
+                Object[] keys = mMoviesAdapter.mAdItems.keySet().toArray();
+                for(int i = currentAdLoadedID ; i < keys.length ; i ++)
+                {
+                    final NativeExpressAdView adView =
+                            (NativeExpressAdView)mMoviesAdapter.mAdItems.get(keys[i]);
+                    if(adView == null)
+                    {
+                        int a = 100;
+                    }
+                    final CardView cardView = (CardView) getActivity().findViewById(R.id.ad_movie_item);
+                    final int adWidth = cardView.getWidth() - cardView.getPaddingLeft()
+                            - cardView.getPaddingRight();
+                    AdSize adSize = new AdSize((int) (adWidth / scale), 150);
+                    adView.setAdSize(adSize);
+                    adView.setAdUnitId("ca-app-pub-9572710061084973/3955429846");
+                }
+                // Load the first Native Express ad in the items list.
+                loadNativeExpressAd(mCurrentAdLoadedID);
+            }
+        });
+    }
+
+    private void loadNativeExpressAd(final int index) {
+
+        Object[] keys = mMoviesAdapter.mAdItems.keySet().toArray();
+        if(index >= keys.length) {
+            isLoadingAds = false;
+            return;
+        }
+
+        isLoadingAds = true;
+        int key = (Integer)keys[index];
+
+        Object item = mMoviesAdapter.mAdItems.get(key);
+        if (!(item instanceof NativeExpressAdView)) {
+            throw new ClassCastException("Expected item at index " + key + " to be a Native"
+                    + " Express ad.");
+        }
+
+        final NativeExpressAdView adView = (NativeExpressAdView) item;
+
+        // Set an AdListener on the NativeExpressAdView to wait for the previous Native Express ad
+        // to finish loading before loading the next ad in the items list.
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                // The previous Native Express ad loaded successfully, call this method again to
+                // load the next ad in the items list.
+                loadNativeExpressAd(mCurrentAdLoadedID);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // The previous Native Express ad failed to load. Call this method again to load
+                // the next ad in the items list.
+                Log.e("MainActivity", "The previous Native Express ad failed to load. Attempting to"
+                        + " load the next Native Express ad in the items list.");
+                loadNativeExpressAd(mCurrentAdLoadedID);
+            }
+        });
+
+        // Load the Native Express ad.
+        adView.loadAd(new AdRequest.Builder().build());
+        mCurrentAdLoadedID++;
+    }
+
 
     private void pullPage(int page) {
         Timber.d(String.format("Page %d is loading.", page));

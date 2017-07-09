@@ -32,7 +32,7 @@ import java.util.List;
 import static com.ewintory.udacity.popularmovies.data.provider.MoviesContract.MoviesColumns;
 
 
-public final class Movie implements Parcelable, MovieMeta {
+public final class Movie extends Object implements Parcelable, MovieMeta {
 
     @Expose
     long id;

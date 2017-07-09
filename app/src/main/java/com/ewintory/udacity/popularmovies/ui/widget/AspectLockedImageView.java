@@ -37,7 +37,7 @@ public final class AspectLockedImageView extends ImageView {
         super(context, attrs);
 
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AspectLockedImageView);
-        aspectRatio = a.getFloat(R.styleable.AspectLockedImageView_imageAspectRatio, 0);
+        aspectRatio = a.getFloat(R.styleable.AspectLockedImageView_myImageAspectRatio, 0);
         a.recycle();
     }
 

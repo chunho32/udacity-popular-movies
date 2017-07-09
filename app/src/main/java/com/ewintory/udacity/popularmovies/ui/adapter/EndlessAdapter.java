@@ -23,8 +23,13 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.ewintory.udacity.popularmovies.R;
+import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.common.collect.Interner;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import rx.functions.Action1;
 
@@ -33,9 +38,13 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
 
     protected static final int VIEW_TYPE_LOAD_MORE = 1;
     protected static final int VIEW_TYPE_ITEM = 2;
+    protected static final int AD_VIEW_TYPE = 3;
+
+    public static  final  int ITEMS_PER_AD = 13;
 
     @NonNull protected final LayoutInflater mInflater;
     @NonNull protected List<T> mItems;
+    @NonNull public Map<Integer,NativeExpressAdView> mAdItems = new LinkedHashMap<>();
 
     protected boolean showLoadMore = false;
 
@@ -75,7 +84,14 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
 
     @Override
     public int getItemViewType(int position) {
-        return isLoadMore(position) ? VIEW_TYPE_LOAD_MORE : VIEW_TYPE_ITEM;
+
+        if(isLoadMore(position))
+            return VIEW_TYPE_LOAD_MORE;
+
+        if(position % ITEMS_PER_AD == 0)
+            return AD_VIEW_TYPE;
+
+        return VIEW_TYPE_ITEM;
     }
 
     @Override
@@ -96,6 +112,17 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
             mItems.addAll(newItems);
             notifyItemRangeInserted(currentSize, amountInserted);
         }
+    }
+
+    public void add(@NonNull T newItem) {
+        int currentSize = mItems.size();
+        mItems.add(newItem);
+        notifyItemRangeInserted(currentSize, 1);
+    }
+
+    public void addAd(int id,NativeExpressAdView adView)
+    {
+        mAdItems.put(id,adView);
     }
 
     @NonNull
@@ -121,6 +148,6 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
                 : onCreateItemHolder(parent, viewType);
     }
 
-    protected abstract VH onCreateItemHolder(ViewGroup parent, int viewType);
+    protected abstract RecyclerView.ViewHolder onCreateItemHolder(ViewGroup parent, int viewType);
 
 }

@@ -33,6 +33,7 @@ import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.utils.ResourceUtils;
 import com.ewintory.udacity.popularmovies.utils.UiUtils;
 import com.github.florent37.glidepalette.GlidePalette;
+import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,6 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.MovieHolder> {
-
     public interface OnMovieClickListener {
         void onContentClicked(@NonNull final Movie movie, View view, int position);
 
@@ -75,17 +75,38 @@ public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.Mov
     }
 
     @Override
-    protected MovieHolder onCreateItemHolder(ViewGroup parent, int viewType) {
+    protected RecyclerView.ViewHolder onCreateItemHolder(ViewGroup parent, int viewType) {
+        if(viewType == AD_VIEW_TYPE)
+        {
+            return new NativeExpressAdViewHolder(mInflater.inflate(R.layout.native_ad_movie_item,parent,false));
+        }
         return new MovieHolder(mInflater.inflate(R.layout.item_movie, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder.getItemViewType() == VIEW_TYPE_ITEM) {
-            ((MovieHolder) holder).bind(mItems.get(position));
+        int viewType = holder.getItemViewType();
+        switch (viewType)
+        {
+            case VIEW_TYPE_ITEM:
+                ((MovieHolder) holder).bind(mItems.get(position));
+                break;
+            case AD_VIEW_TYPE:
+                NativeExpressAdViewHolder nativeExpressAdViewHolder = (NativeExpressAdViewHolder)holder;
+                NativeExpressAdView adView  = (NativeExpressAdView)mAdItems.get(position);
+                ViewGroup adCardView = (ViewGroup)nativeExpressAdViewHolder.itemView;
+                adCardView.removeAllViews();
+                break;
         }
+
     }
 
+    final class NativeExpressAdViewHolder extends RecyclerView.ViewHolder {
+        NativeExpressAdViewHolder(View view)
+        {
+            super(view);
+        }
+    }
     final class MovieHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.movie_item_container) View mContentContainer;
         @Bind(R.id.movie_item_image) ImageView mImageView;

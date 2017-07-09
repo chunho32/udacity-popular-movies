@@ -40,7 +40,7 @@
                 android:padding="0dp"
                 android:scaleType="centerCrop"
                 android:src="@color/movie_poster_placeholder"
-                app:imageAspectRatio="@dimen/movie_item_image_aspect_ratio"
+                app:myImageAspectRatio="@dimen/movie_item_image_aspect_ratio"
                 tools:layout_width="wrap_content"
                 tools:src="@drawable/placeholder_movie_item_image" />
 

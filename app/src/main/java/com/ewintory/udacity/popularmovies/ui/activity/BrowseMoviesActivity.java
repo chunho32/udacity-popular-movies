@@ -53,6 +53,7 @@ import com.ewintory.udacity.popularmovies.ui.fragment.MoviesFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.SortedMoviesFragment;
 import com.ewintory.udacity.popularmovies.utils.PrefUtils;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.google.android.gms.ads.MobileAds;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -84,6 +85,8 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_movies);
+
+        MobileAds.initialize(this, "ca-app-pub-9572710061084973~7373227842");
 
         mTwoPane = false;//findViewById(R.id.movie_details_container) != null;
 

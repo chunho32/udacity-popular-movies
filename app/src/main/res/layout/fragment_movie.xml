@@ -45,7 +45,7 @@
                 android:background="@android:color/white"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                app:imageAspectRatio="@dimen/movie_details_cover_aspect_ratio"
+                app:myImageAspectRatio="@dimen/movie_details_cover_aspect_ratio"
                 tools:src="@drawable/placeholder_movie_details_image" />
 
             <ImageView
@@ -91,7 +91,7 @@
                     android:layout_marginStart="@dimen/movie_details_poster_left_margin"
                     android:layout_marginTop="@dimen/movie_details_poster_top_margin"
                     android:contentDescription="@null"
-                    app:imageAspectRatio="@dimen/movie_item_image_aspect_ratio"
+                    app:myImageAspectRatio="@dimen/movie_item_image_aspect_ratio"
                     tools:src="@drawable/placeholder_movie_item_image" />
 
                 <ImageButton
