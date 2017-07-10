@@ -14,12 +14,13 @@
   limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.SettingsActivity">
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.activity.PreferenceActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -29,4 +30,12 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-</LinearLayout>
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/ad_view_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/ad_unit_id_banner_setting" />
+</RelativeLayout>

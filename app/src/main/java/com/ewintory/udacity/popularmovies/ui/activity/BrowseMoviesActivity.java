@@ -86,8 +86,6 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_movies);
 
-        MobileAds.initialize(this, "ca-app-pub-9572710061084973~7373227842");
-
         mTwoPane = false;//findViewById(R.id.movie_details_container) != null;
 
         mSortMode = (savedInstanceState != null) ?

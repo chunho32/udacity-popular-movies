@@ -19,6 +19,7 @@ package com.ewintory.udacity.popularmovies;
 import android.app.Application;
 import android.content.Context;
 
+import com.google.android.gms.ads.MobileAds;
 import com.squareup.leakcanary.RefWatcher;
 
 import dagger.ObjectGraph;
@@ -35,6 +36,8 @@ public final class PopularMoviesApplication extends Application {
 
     @Override public void onCreate() {
         super.onCreate();
+
+        MobileAds.initialize(this, getString(R.string.ad_app_id));
 
         refWatcher = installLeakCanary();
         objectGraph = initializeObjectGraph();

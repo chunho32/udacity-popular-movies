@@ -207,7 +207,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
 
                     mViewAnimator.setDisplayedChildId(ANIMATOR_VIEW_CONTENT);
 
-                    if(mCurrentPage >= mMaxPage && !isLoadingAds && mCurrentAdLoadedID < mMoviesAdapter.mAdItems.size())
+                    if(!movies.isEmpty() && mCurrentPage >= mMaxPage && !isLoadingAds && mCurrentAdLoadedID < mMoviesAdapter.mAdItems.size())
                     {
                         setUpAndLoadNativeExpressAds(mCurrentAdLoadedID);
                     }
@@ -226,13 +226,13 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
         // Use a Runnable to ensure that the RecyclerView has been laid out before setting the
         // ad size for the Native Express ad. This allows us to set the Native Express ad's
         // width to match the full width of the RecyclerView.
-        isLoadingAds = true;
+
         mRecyclerView.post(new Runnable() {
             @Override
             public void run() {
                 final float scale = getActivity().getResources().getDisplayMetrics().density;
                 // Set the ad size and ad unit ID for each Native Express ad in the items list.
-
+                isLoadingAds = true;
                 Object[] keys = mMoviesAdapter.mAdItems.keySet().toArray();
 
                 mLastAdInitIndex = keys.length;
@@ -247,8 +247,15 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                                 - cardView.getPaddingRight();
                         AdSize adSize = new AdSize((int) (adWidth / scale), 150);
                         adView.setAdSize(adSize);
-                        adView.setAdUnitId("ca-app-pub-9572710061084973/3955429846_3434");
+                        adView.setAdUnitId(getActivity().getString(R.string.ad_unit_id_native_express_movie_item));
                     }
+                    else
+                    {
+                        Log.d("HUNG_TAG","INIT_AD_VIEW _ FAILED " + keys[i].toString());
+                        mLastAdInitIndex = keys.length - 1;
+                        return;
+                    }
+                    Log.d("HUNG_TAG","INIT_AD_VIEW " + keys[i].toString());
                 }
                 // Load the first Native Express ad in the items list.
                 loadNativeExpressAd(mCurrentAdLoadedID);
@@ -265,6 +272,8 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
         Object[] keys = mMoviesAdapter.mAdItems.keySet().toArray();
         isLoadingAds = true;
         int key = (Integer)keys[index];
+
+        Log.d("HUNG_TAG","LOAD_AD_VIEW " + keys[index].toString());
 
         Object item = mMoviesAdapter.mAdItems.get(key);
         if (!(item instanceof NativeExpressAdView)) {
@@ -283,6 +292,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                 // The previous Native Express ad loaded successfully, call this method again to
                 // load the next ad in the items list.
                 loadNativeExpressAd(mCurrentAdLoadedID);
+                mCurrentAdLoadedID++;
             }
 
             @Override
@@ -292,12 +302,13 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                 Log.e("MainActivity", "The previous Native Express ad failed to load. Attempting to"
                         + " load the next Native Express ad in the items list.");
                 loadNativeExpressAd(mCurrentAdLoadedID);
+                mCurrentAdLoadedID++;
             }
         });
 
         // Load the Native Express ad.
         adView.loadAd(new AdRequest.Builder().build());
-        mCurrentAdLoadedID++;
+
     }
 
 

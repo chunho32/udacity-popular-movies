@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "980092730642-1gn57aejcvquk8e2cpvb3qmvebqbjuqi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ewintory.udacity.popularmovies",
+            "certificate_hash": "586301f4543268b4de8e7c3c10c614d13f9e5e84"
+          }
+        },
+        {
           "client_id": "980092730642-gjsgpnuio38gi95met6cspm680ju8t8u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

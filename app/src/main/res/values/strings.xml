@@ -66,4 +66,9 @@
     <string name="message_movie_favored">Saved to favorites.</string>
     <string name="sync_account_type">popularmovies.ewintory.com</string>
 
+    <string name="ad_app_id">ca-app-pub-9572710061084973~7373227842</string>
+    <string name="ad_unit_id_banner_setting"> ca-app-pub-9572710061084973/7415097040</string>
+    <string name="ad_unit_id_native_express_movie_details">ca-app-pub-9572710061084973/8891830249</string>
+    <string name="ad_unit_id_native_express_movie_item">ca-app-pub-3940256099942544/2177258514</string>
+
 </resources>

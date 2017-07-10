@@ -176,14 +176,14 @@ public abstract class MoviesFragment extends BaseFragment implements
         listener.onMovieSelected(movie, view);
     }
 
-    @Override
-    public void onFavoredClicked(@NonNull final Movie movie, int position) {
-        boolean favored = !movie.isFavored();
-        Timber.v("onFavoredClicked: favored=" + favored);
-
-        mHelper.setMovieFavored(movie, favored);
-        if (favored) showToast(R.string.message_movie_favored);
-    }
+//    @Override
+//    public void onFavoredClicked(@NonNull final Movie movie, int position) {
+//        boolean favored = !movie.isFavored();
+//        Timber.v("onFavoredClicked: favored=" + favored);
+//
+//        mHelper.setMovieFavored(movie, favored);
+//        if (favored) showToast(R.string.message_movie_favored);
+//    }
 
     @CallSuper
     protected void initRecyclerView() {

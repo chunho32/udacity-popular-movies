@@ -47,12 +47,12 @@ public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.Mov
     public interface OnMovieClickListener {
         void onContentClicked(@NonNull final Movie movie, View view, int position);
 
-        void onFavoredClicked(@NonNull final Movie movie, int position);
+        //void onFavoredClicked(@NonNull final Movie movie, int position);
 
         OnMovieClickListener DUMMY = new OnMovieClickListener() {
             @Override public void onContentClicked(@NonNull Movie movie, View view, int position) {}
 
-            @Override public void onFavoredClicked(@NonNull Movie movie, int position) { }
+            //@Override public void onFavoredClicked(@NonNull Movie movie, int position) { }
         };
     }
 
@@ -113,7 +113,7 @@ public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.Mov
         @Bind(R.id.movie_item_title) TextView mTitleView;
         @Bind(R.id.movie_item_genres) TextView mGenresView;
         @Bind(R.id.movie_item_footer) View mFooterView;
-        @Bind(R.id.movie_item_btn_favorite) ImageButton mFavoriteButton;
+        //@Bind(R.id.movie_item_btn_favorite) ImageButton mFavoriteButton;
 
         @BindColor(R.color.theme_primary) int mColorBackground;
         @BindColor(R.color.body_text_white) int mColorTitle;
@@ -130,11 +130,11 @@ public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.Mov
         public void bind(@NonNull final Movie movie) {
             mContentContainer.setOnClickListener(view -> mListener.onContentClicked(movie, view, getAdapterPosition()));
 
-            mFavoriteButton.setSelected(movie.isFavored());
-            mFavoriteButton.setOnClickListener(view -> {
-                mFavoriteButton.setSelected(!movie.isFavored());
-                mListener.onFavoredClicked(movie, getAdapterPosition());
-            });
+//            mFavoriteButton.setSelected(movie.isFavored());
+//            mFavoriteButton.setOnClickListener(view -> {
+//                mFavoriteButton.setSelected(!movie.isFavored());
+//                mListener.onFavoredClicked(movie, getAdapterPosition());
+//            });
 
             mTitleView.setText(movie.getTitle());
             mGenresView.setText(UiUtils.joinGenres(movie.getGenres(), ", ", mBuilder));
@@ -158,7 +158,7 @@ public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.Mov
             mFooterView.setBackgroundColor(mColorBackground);
             mTitleView.setTextColor(mColorTitle);
             mGenresView.setTextColor(mColorSubtitle);
-            mFavoriteButton.setColorFilter(mColorTitle, PorterDuff.Mode.MULTIPLY);
+            //mFavoriteButton.setColorFilter(mColorTitle, PorterDuff.Mode.MULTIPLY);
         }
 
         private void applyColors(Palette.Swatch swatch) {
@@ -166,7 +166,7 @@ public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.Mov
                 mFooterView.setBackgroundColor(swatch.getRgb());
                 mTitleView.setTextColor(swatch.getBodyTextColor());
                 mGenresView.setTextColor(swatch.getTitleTextColor());
-                mFavoriteButton.setColorFilter(swatch.getBodyTextColor(), PorterDuff.Mode.MULTIPLY);
+                //mFavoriteButton.setColorFilter(swatch.getBodyTextColor(), PorterDuff.Mode.MULTIPLY);
             }
         }
     }

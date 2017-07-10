@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,6 +51,12 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.VideoController;
+import com.google.android.gms.ads.VideoOptions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,15 +97,18 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
     @Bind(R.id.movie_overview) TextView mOverview;
     @Bind(R.id.movie_reviews_container) ViewGroup mReviewsGroup;
     @Bind(R.id.movie_videos_container) ViewGroup mVideosGroup;
+    @Bind(R.id.native_express_adView) NativeExpressAdView mNativeExpressAdview;
 
     @BindColor(R.color.theme_primary) int mColorThemePrimary;
     @BindColor(R.color.body_text_white) int mColorTextWhite;
+
 
     @Inject MoviesRepository mMoviesRepository;
 
     private MoviesHelper mHelper;
     private CompositeSubscription mSubscriptions;
     private List<Runnable> mDeferredUiOperations = new ArrayList<>();
+    private VideoController mVideoController;
 
     private Movie mMovie;
     private List<Review> mReviews;
@@ -133,6 +143,33 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
 
         trySetupToolbar();
         mScrollView.setScrollViewCallbacks(this);
+
+        // Set its video options.
+        mNativeExpressAdview.setVideoOptions(new VideoOptions.Builder()
+                .setStartMuted(true)
+                .build());
+
+        mVideoController = mNativeExpressAdview.getVideoController();
+        mVideoController.setVideoLifecycleCallbacks(new VideoController.VideoLifecycleCallbacks() {
+            @Override
+            public void onVideoEnd() {
+                Log.d("MOVIE_FRAGMENT", "Video playback is finished.");
+                super.onVideoEnd();
+            }
+        });
+
+        mNativeExpressAdview.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                if (mVideoController.hasVideoContent()) {
+                    Log.d("MOVIE_FRAGMENT", "Received an ad that contains a video asset.");
+                } else {
+                    Log.d("MOVIE_FRAGMENT", "Received an ad that does not contain a video asset.");
+                }
+            }
+        });
+
+        mNativeExpressAdview.loadAd(new AdRequest.Builder().build());
 
         if (savedInstanceState != null) {
             mVideos = savedInstanceState.getParcelableArrayList(STATE_VIDEOS);
