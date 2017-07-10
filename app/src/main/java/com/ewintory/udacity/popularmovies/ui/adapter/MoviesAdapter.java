@@ -76,10 +76,6 @@ public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.Mov
 
     @Override
     protected RecyclerView.ViewHolder onCreateItemHolder(ViewGroup parent, int viewType) {
-        if(viewType == AD_VIEW_TYPE)
-        {
-            return new NativeExpressAdViewHolder(mInflater.inflate(R.layout.native_ad_movie_item,parent,false));
-        }
         return new MovieHolder(mInflater.inflate(R.layout.item_movie, parent, false));
     }
 
@@ -101,12 +97,7 @@ public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.Mov
 
     }
 
-    final class NativeExpressAdViewHolder extends RecyclerView.ViewHolder {
-        NativeExpressAdViewHolder(View view)
-        {
-            super(view);
-        }
-    }
+
     final class MovieHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.movie_item_container) View mContentContainer;
         @Bind(R.id.movie_item_image) ImageView mImageView;

@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.ewintory.udacity.popularmovies.R;
@@ -36,9 +37,9 @@ import rx.functions.Action1;
 public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements Action1<List<T>> {
 
-    protected static final int VIEW_TYPE_LOAD_MORE = 1;
-    protected static final int VIEW_TYPE_ITEM = 2;
-    protected static final int AD_VIEW_TYPE = 3;
+    public static final int VIEW_TYPE_LOAD_MORE = 1;
+    public static final int VIEW_TYPE_ITEM = 2;
+    public static final int AD_VIEW_TYPE = 3;
 
     public static  final  int ITEMS_PER_AD = 13;
 
@@ -141,8 +142,20 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
         }
     }
 
+    final class NativeExpressAdViewHolder extends RecyclerView.ViewHolder {
+        NativeExpressAdViewHolder(View view)
+        {
+            super(view);
+        }
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType == AD_VIEW_TYPE)
+        {
+            View nativeExpressLayoutView = mInflater.inflate(R.layout.native_ad_movie_item, parent, false);
+            return new NativeExpressAdViewHolder(nativeExpressLayoutView);
+        }
         return viewType == VIEW_TYPE_LOAD_MORE
                 ? new RecyclerView.ViewHolder(mInflater.inflate(R.layout.item_load_more, parent, false)) {}
                 : onCreateItemHolder(parent, viewType);

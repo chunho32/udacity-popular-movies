@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -188,10 +189,20 @@ public abstract class MoviesFragment extends BaseFragment implements
     @CallSuper
     protected void initRecyclerView() {
         mGridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.movies_columns));
+        mGridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override public int getSpanSize(int position) {
                 int spanCount = mGridLayoutManager.getSpanCount();
-                return (mMoviesAdapter.isLoadMore(position) /* && (position % spanCount == 0) */) ? spanCount : 1;
+                switch (mMoviesAdapter.getItemViewType(position))
+                {
+                    case MoviesAdapter.AD_VIEW_TYPE :
+                        return 3;
+                    case MoviesAdapter.VIEW_TYPE_ITEM:
+                        return 1;
+                    default:
+                        return spanCount;
+                }
+//                return (mMoviesAdapter.isLoadMore(position) /* && (position % spanCount == 0) */) ? spanCount : 1;
             }
         });
 
