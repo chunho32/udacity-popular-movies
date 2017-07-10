@@ -263,7 +263,12 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
         mSubscriptions.add(mMoviesRepository.reviews(mMovie.getId())
                 .subscribe(reviews -> {
                     Timber.d(String.format("Reviews loaded, %d items.", reviews.size()));
-                    onReviewsLoaded(reviews);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onReviewsLoaded(reviews);
+                        }
+                    });
                 }, throwable -> {
                     Timber.e(throwable, "Reviews loading failed.");
                     onReviewsLoaded(null);
@@ -305,7 +310,13 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
         mSubscriptions.add(mMoviesRepository.videos(mMovie.getId()).subscribe(videos -> {
             Timber.d(String.format("Videos loaded, %d items.", videos.size()));
             Timber.d("Videos: " + videos);
-            onVideosLoaded(videos);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onVideosLoaded(videos);
+                }
+            });
+
         }, throwable -> {
             Timber.e(throwable, "Videos loading failed.");
             onVideosLoaded(null);
@@ -325,7 +336,8 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
         boolean hasVideos = false;
         if (!Lists.isEmpty(videos)) {
             for (Video video : mVideos)
-                if (video.getType().equals(Video.TYPE_TRAILER)) {
+                //if (video.getType().equals(Video.TYPE_TRAILER))
+                {
                     Timber.d("Found trailer!");
                     mTrailer = video;
 

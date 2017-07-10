@@ -68,7 +68,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
     private String mGenreName = "noname";
     private int mCurrentPage = 0;
     private boolean mIsLoading = false;
-
+    private int mLastAdInitIndex = 0;
     private boolean first_movie_loaded = false;
     private boolean isLoadingAds = false;
     private int mMaxPage = 0;
@@ -234,20 +234,21 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                 // Set the ad size and ad unit ID for each Native Express ad in the items list.
 
                 Object[] keys = mMoviesAdapter.mAdItems.keySet().toArray();
+
+                mLastAdInitIndex = keys.length;
+
                 for(int i = currentAdLoadedID ; i < keys.length ; i ++)
                 {
                     final NativeExpressAdView adView =
                             (NativeExpressAdView)mMoviesAdapter.mAdItems.get(keys[i]);
-                    if(adView == null)
-                    {
-                        int a = 100;
-                    }
                     final CardView cardView = (CardView) getActivity().findViewById(R.id.ad_movie_item);
-                    final int adWidth = cardView.getWidth() - cardView.getPaddingLeft()
-                            - cardView.getPaddingRight();
-                    AdSize adSize = new AdSize((int) (adWidth / scale), 150);
-                    adView.setAdSize(adSize);
-                    adView.setAdUnitId("ca-app-pub-9572710061084973/3955429846");
+                    if(cardView != null) {
+                        final int adWidth = cardView.getWidth() - cardView.getPaddingLeft()
+                                - cardView.getPaddingRight();
+                        AdSize adSize = new AdSize((int) (adWidth / scale), 150);
+                        adView.setAdSize(adSize);
+                        adView.setAdUnitId("ca-app-pub-9572710061084973/3955429846_3434");
+                    }
                 }
                 // Load the first Native Express ad in the items list.
                 loadNativeExpressAd(mCurrentAdLoadedID);
@@ -256,13 +257,12 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
     }
 
     private void loadNativeExpressAd(final int index) {
-
-        Object[] keys = mMoviesAdapter.mAdItems.keySet().toArray();
-        if(index >= keys.length) {
+        if(index >= mLastAdInitIndex) {
             isLoadingAds = false;
             return;
         }
 
+        Object[] keys = mMoviesAdapter.mAdItems.keySet().toArray();
         isLoadingAds = true;
         int key = (Integer)keys[index];
 
