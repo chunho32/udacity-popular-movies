@@ -42,6 +42,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
     public static final int AD_VIEW_TYPE = 3;
 
     public static  final  int ITEMS_PER_AD = 13;
+    public static  final  int START_AD_INDEX = 3;
 
     @NonNull protected final LayoutInflater mInflater;
     @NonNull protected List<T> mItems;
@@ -89,7 +90,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
         if(isLoadMore(position))
             return VIEW_TYPE_LOAD_MORE;
 
-        if(position % ITEMS_PER_AD == 0)
+        if(position >= START_AD_INDEX && ((position - START_AD_INDEX) % ITEMS_PER_AD == 0))
             return AD_VIEW_TYPE;
 
         return VIEW_TYPE_ITEM;

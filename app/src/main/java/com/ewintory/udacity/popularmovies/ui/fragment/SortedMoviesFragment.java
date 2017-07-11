@@ -72,6 +72,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
     private boolean first_movie_loaded = false;
     private boolean isLoadingAds = false;
     private int mMaxPage = 0;
+    private boolean m_firstItem = false;
     public static SortedMoviesFragment newInstance(@NonNull Sort sort) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_SORT, sort);
@@ -193,7 +194,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                     mMoviesAdapter.setLoadMore(!movies.isEmpty());
                     for(int i = 0 ; i < movies.size(); i++)
                     {
-                        if(mMoviesAdapter.getItems().size() % MoviesAdapter.ITEMS_PER_AD == 0)
+                        if(mMoviesAdapter.getItems().size() >= MoviesAdapter.START_AD_INDEX && ((mMoviesAdapter.getItems().size() - MoviesAdapter.START_AD_INDEX ) % MoviesAdapter.ITEMS_PER_AD == 0))
                         {
                             final NativeExpressAdView adView = new NativeExpressAdView(getActivity());
                             mMoviesAdapter.addAd(mMoviesAdapter.getItems().size(),adView);
@@ -201,6 +202,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                             Movie adMarkMovie = new Movie();
                             adMarkMovie.setId(-1000);
                             mMoviesAdapter.add(adMarkMovie);
+                            m_firstItem = true;
                         }
                         mMoviesAdapter.add(movies.get(i));
                     }
@@ -245,7 +247,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                     if(cardView != null) {
                         final int adWidth = cardView.getWidth() - cardView.getPaddingLeft()
                                 - cardView.getPaddingRight();
-                        AdSize adSize = new AdSize(320,132);
+                        AdSize adSize = new AdSize((int) (adWidth / scale), 150);
                         adView.setAdSize(adSize);
                         adView.setAdUnitId(getActivity().getString(R.string.ad_unit_id_native_express_movie_item));
                     }
@@ -277,8 +279,6 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
 
         Object item = mMoviesAdapter.mAdItems.get(key);
 
-
-
         if (!(item instanceof NativeExpressAdView)) {
             throw new ClassCastException("Expected item at index " + key + " to be a Native"
                     + " Express ad.");
@@ -293,8 +293,9 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                 super.onAdLoaded();
                 // The previous Native Express ad loaded successfully, call this method again to
                 // load the next ad in the items list.
-                loadNativeExpressAd(mCurrentAdLoadedID);
                 mCurrentAdLoadedID++;
+                loadNativeExpressAd(mCurrentAdLoadedID);
+
             }
 
             @Override
@@ -303,8 +304,9 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                 // the next ad in the items list.
                 Log.e("MainActivity", "The previous Native Express ad failed to load. Attempting to"
                         + " load the next Native Express ad in the items list.");
-                loadNativeExpressAd(mCurrentAdLoadedID);
                 mCurrentAdLoadedID++;
+                loadNativeExpressAd(mCurrentAdLoadedID);
+
             }
         });
 
