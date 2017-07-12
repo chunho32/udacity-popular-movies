@@ -91,7 +91,15 @@ public final class MoviesAdapter extends EndlessAdapter<Movie, MoviesAdapter.Mov
                 NativeExpressAdViewHolder nativeExpressAdViewHolder = (NativeExpressAdViewHolder)holder;
                 NativeExpressAdView adView  = (NativeExpressAdView)mAdItems.get(position);
                 ViewGroup adCardView = (ViewGroup)nativeExpressAdViewHolder.itemView;
-                adCardView.removeAllViews();
+                if (adCardView.getChildCount() > 0) {
+                    adCardView.removeAllViews();
+                }
+                if (adView.getParent() != null) {
+                    ((ViewGroup) adView.getParent()).removeView(adView);
+                }
+
+                // Add the Native Express ad to the native express ad view.
+                adCardView.addView(adView);
                 break;
         }
 
