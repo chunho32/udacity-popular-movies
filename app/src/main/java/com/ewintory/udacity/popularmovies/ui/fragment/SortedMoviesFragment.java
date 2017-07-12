@@ -174,6 +174,8 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
             mViewAnimator.setDisplayedChildId(ANIMATOR_VIEW_LOADING);
 
         mSelectedPosition = -1;
+        isLoadingAds = false;
+        mCurrentAdLoadedID = 0;
         reAddOnScrollListener(mGridLayoutManager, mCurrentPage = 0);
         pullPage(1);
     }
@@ -285,33 +287,38 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
         }
 
         final NativeExpressAdView adView = (NativeExpressAdView) item;
-        // Set an AdListener on the NativeExpressAdView to wait for the previous Native Express ad
-        // to finish loading before loading the next ad in the items list.
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                // The previous Native Express ad loaded successfully, call this method again to
-                // load the next ad in the items list.
-                mCurrentAdLoadedID++;
-                loadNativeExpressAd(mCurrentAdLoadedID);
+        if(adView.getAdSize().getWidth() > 0) {
+            // Set an AdListener on the NativeExpressAdView to wait for the previous Native Express ad
+            // to finish loading before loading the next ad in the items list.
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    // The previous Native Express ad loaded successfully, call this method again to
+                    // load the next ad in the items list.
+                    mCurrentAdLoadedID++;
+                    loadNativeExpressAd(mCurrentAdLoadedID);
 
-            }
+                }
 
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                // The previous Native Express ad failed to load. Call this method again to load
-                // the next ad in the items list.
-                Log.e("MainActivity", "The previous Native Express ad failed to load. Attempting to"
-                        + " load the next Native Express ad in the items list.");
-                mCurrentAdLoadedID++;
-                loadNativeExpressAd(mCurrentAdLoadedID);
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    // The previous Native Express ad failed to load. Call this method again to load
+                    // the next ad in the items list.
+                    Log.e("MainActivity", "The previous Native Express ad failed to load. Attempting to"
+                            + " load the next Native Express ad in the items list.");
+                    mCurrentAdLoadedID++;
+                    loadNativeExpressAd(mCurrentAdLoadedID);
 
-            }
-        });
+                }
+            });
 
-        // Load the Native Express ad.
-        adView.loadAd(new AdRequest.Builder().build());
+            // Load the Native Express ad.
+            adView.loadAd(new AdRequest.Builder().build());
+        }
+        else {
+            Log.d("HUNG_TAG","why not set size");
+        }
 
     }
 

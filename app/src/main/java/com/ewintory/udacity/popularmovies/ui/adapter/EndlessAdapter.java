@@ -137,10 +137,14 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
     }
 
     public void clear() {
+        if (!mAdItems.isEmpty()) {
+            mAdItems.clear();
+        }
         if (!mItems.isEmpty()) {
             mItems.clear();
             notifyDataSetChanged();
         }
+
     }
 
     final class NativeExpressAdViewHolder extends RecyclerView.ViewHolder {
