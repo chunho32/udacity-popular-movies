@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ewintory.udacity.popularmovies.R;
+import com.ewintory.udacity.popularmovies.data.api.ApiModule;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.data.repository.MoviesRepository;
 import com.ewintory.udacity.popularmovies.ui.activity.BrowseMoviesActivity;

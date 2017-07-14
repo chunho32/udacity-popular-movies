@@ -33,20 +33,18 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 @Module(complete = false, library = true)
-public final class ApiModule {
-    public static final String MOVIE_DB_API_URL = "http://13.76.179.224:3000/api/v3";//"http://api.themoviedb.org/3";
+public final class ServerConfigModule {
+    public static final String SERVER_CONFIG_URL = "abc.com";//http://13.76.179.224:3000/api/v3";//"http://api.themoviedb.org/3";
 
-    public static String SERVER_CONFIG_URL = "";
-
-    @Provides @Singleton Endpoint provideEndpoint() {
-        return Endpoints.newFixedEndpoint(MOVIE_DB_API_URL);
+    @Provides @Singleton @Named("SERVER_CONFIG") Endpoint provideEndpoint() {
+        return Endpoints.newFixedEndpoint(SERVER_CONFIG_URL);
     }
 
-    @Provides @Singleton @Named("Api") OkHttpClient provideApiClient(OkHttpClient client) {
+    @Provides @Singleton @Named("SERVER_CONFIG") OkHttpClient provideApiClient(OkHttpClient client) {
         return client.clone();
     }
 
-    @Provides @Singleton RestAdapter provideRestAdapter(Endpoint endpoint, @Named("Api") OkHttpClient client, Gson gson) {
+    @Provides @Singleton @Named("SERVER_CONFIG") RestAdapter provideRestAdapter(@Named("SERVER_CONFIG") Endpoint endpoint, @Named("SERVER_CONFIG") OkHttpClient client, Gson gson) {
         return new RestAdapter.Builder()
                 .setClient(new OkClient(client))
                 .setEndpoint(endpoint)
@@ -54,9 +52,5 @@ public final class ApiModule {
                 //.setRequestInterceptor(request -> request.addQueryParam("api_key", BuildConfig.MOVIE_DB_API_KEY))
                 .setConverter(new GsonConverter(gson))
                 .build();
-    }
-
-    @Provides @Singleton MoviesApi provideMoviesApi(RestAdapter restAdapter) {
-        return restAdapter.create(MoviesApi.class);
     }
 }
