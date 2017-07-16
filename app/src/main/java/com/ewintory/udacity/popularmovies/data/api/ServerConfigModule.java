@@ -16,7 +16,6 @@
 
 package com.ewintory.udacity.popularmovies.data.api;
 
-import com.ewintory.udacity.popularmovies.BuildConfig;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -27,7 +26,6 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
@@ -52,5 +50,10 @@ public final class ServerConfigModule {
                 //.setRequestInterceptor(request -> request.addQueryParam("api_key", BuildConfig.MOVIE_DB_API_KEY))
                 .setConverter(new GsonConverter(gson))
                 .build();
+    }
+    @Provides @Singleton
+    ServerConfigApi provideServerConfigApi(@Named("SERVER_CONFIG") RestAdapter restAdapter)
+    {
+        return restAdapter.create(ServerConfigApi.class);
     }
 }

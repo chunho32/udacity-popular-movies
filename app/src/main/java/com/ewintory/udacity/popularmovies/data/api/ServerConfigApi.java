@@ -9,9 +9,7 @@ import rx.Observable;
  * Created by hunghm on 7/14/17.
  */
 
-public class ServerConfigApi {
+public interface ServerConfigApi {
     @GET("/")
-    Observable<ServerConfig.Response> genres() {
-        return null;
-    }
+    Observable<ServerConfig.Response> genres();
 }
