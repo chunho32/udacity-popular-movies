@@ -5,10 +5,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/splashfragment"
-        android:name="com.ewintory.udacity.popularmovies.ui.fragment.SplashFragment"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal" />
 </LinearLayout>

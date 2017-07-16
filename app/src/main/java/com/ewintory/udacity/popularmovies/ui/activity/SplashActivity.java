@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.ewintory.udacity.popularmovies.R;
-import com.ewintory.udacity.popularmovies.ui.fragment.SplashFragment;
+import com.ewintory.udacity.popularmovies.data.api.ApiModule;
 
 /**
  * Created by Hung Hoang on 7/16/2017.
@@ -17,6 +17,11 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        ApiModule.MOVIE_DB_API_URL = "http://13.76.179.224:3000/api/v3";
+
+        Intent intent = new Intent(this, BrowseMoviesActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
     @Override

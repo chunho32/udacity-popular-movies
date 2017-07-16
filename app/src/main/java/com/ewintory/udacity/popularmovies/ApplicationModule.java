@@ -19,8 +19,6 @@ package com.ewintory.udacity.popularmovies;
 import android.app.Application;
 
 import com.ewintory.udacity.popularmovies.data.DataModule;
-import com.ewintory.udacity.popularmovies.data.api.ServerConfigModule;
-import com.ewintory.udacity.popularmovies.data.repository.ServerModule;
 
 import javax.inject.Singleton;
 
@@ -29,8 +27,7 @@ import dagger.Provides;
 
 @Module(
         includes = {
-                DataModule.class,
-                ServerModule.class
+                DataModule.class
         },
         injects = {
                 PopularMoviesApplication.class
