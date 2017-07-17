@@ -160,7 +160,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
 
     @Override
     public void onRefresh() {
-        if (mSort != null) reloadContent();
+        if (mSort != null || mGenre >= 0) reloadContent();
     }
 
     @Override

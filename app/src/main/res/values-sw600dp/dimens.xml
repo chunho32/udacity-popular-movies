@@ -28,5 +28,6 @@
 
     <!-- Common -->
     <dimen name="item_load_more_size">72dp</dimen>
+    <dimen name="footer_height">60dp</dimen>
 
 </resources>

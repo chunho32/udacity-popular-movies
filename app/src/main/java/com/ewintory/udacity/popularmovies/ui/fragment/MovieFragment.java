@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ewintory.udacity.popularmovies.R;
+import com.ewintory.udacity.popularmovies.data.api.ApiModule;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.data.model.Review;
 import com.ewintory.udacity.popularmovies.data.model.Video;
@@ -175,6 +176,11 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
             mVideos = savedInstanceState.getParcelableArrayList(STATE_VIDEOS);
             mReviews = savedInstanceState.getParcelableArrayList(STATE_REVIEWS);
             mScrollView.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_SCROLL_VIEW));
+        }
+
+        if(ApiModule.serverConfig.isIn_review())
+        {
+            mViewBtn.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -378,14 +384,22 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
                     Timber.d("Found trailer!");
                     mTrailer = video;
 
-                    mCoverContainer.setTag(video);
-                    mCoverContainer.setOnClickListener(view -> mHelper.playVideo((Video) view.getTag()));
-
                     mTrailerBtn.setTag(video);
                     mTrailerBtn.setOnClickListener(view -> mHelper.playTrailer((Video) view.getTag()));
 
-                    mViewBtn.setTag(video);
-                    mViewBtn.setOnClickListener(view -> mHelper.playVideo((Video) view.getTag()));
+                    if(!ApiModule.serverConfig.isIn_review()) {
+                        mCoverContainer.setTag(video);
+                        mCoverContainer.setOnClickListener(view -> mHelper.playVideo((Video) view.getTag()));
+
+
+                        mViewBtn.setTag(video);
+                        mViewBtn.setOnClickListener(view -> mHelper.playVideo((Video) view.getTag()));
+                    }
+                    else
+                    {
+                        mCoverContainer.setTag(video);
+                        mCoverContainer.setOnClickListener(view -> mHelper.playTrailer((Video) view.getTag()));
+                    }
                     break;
                 }
 

@@ -17,6 +17,7 @@
 package com.ewintory.udacity.popularmovies.data.api;
 
 import com.ewintory.udacity.popularmovies.BuildConfig;
+import com.ewintory.udacity.popularmovies.data.ServerConfig;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -34,12 +35,11 @@ import retrofit.converter.GsonConverter;
 
 @Module(complete = false, library = true)
 public final class ApiModule {
-    public static String MOVIE_DB_API_URL = "http://api.themoviedb.org/3";
 
-    public static String SERVER_CONFIG_URL = "";
+    public static ServerConfig serverConfig;
 
     @Provides @Singleton Endpoint provideEndpoint() {
-        return Endpoints.newFixedEndpoint(MOVIE_DB_API_URL);
+        return Endpoints.newFixedEndpoint(serverConfig.getServer_url());
     }
 
     @Provides @Singleton @Named("Api") OkHttpClient provideApiClient(OkHttpClient client) {

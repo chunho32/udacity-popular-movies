@@ -3,7 +3,7 @@
         id="@+id/tab_home"
         icon="@drawable/ic_home"
         title="Home"
-        barColorWhenSelected="#ff01579b"/>
+        barColorWhenSelected="#ff546e7a"/>
     <tab
         id="@+id/tab_Genres"
         icon="@drawable/ic_video_library"

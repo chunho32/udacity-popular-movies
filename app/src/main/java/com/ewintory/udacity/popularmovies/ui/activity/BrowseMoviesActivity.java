@@ -80,7 +80,7 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
     private DrawerLayout mDrawerLayout;
     private LinearLayout mDrawerList;
     private LeftMenuFragment mLeftViewFragment;
-
+    private BottomBar bottomBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +93,7 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
                 : PrefUtils.getBrowseMoviesMode(this);
 
         //initModeSpinner();
-        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
@@ -102,7 +102,7 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         Window window = getWindow();
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        window.setStatusBarColor(Color.parseColor("#ff01579b"));
+                        window.setStatusBarColor(Color.parseColor("#ff546e7a"));
                     }
                 }
                 else if (tabId == R.id.tab_Genres) {
@@ -298,6 +298,7 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
     public void onListFragmentInteraction(Genre item) {
         onGenresTabSelected(item.getId(),item.getName());
         mDrawerLayout.closeDrawers();
+        bottomBar.setVisibility(View.VISIBLE);
     }
 
     private class ModeSpinnerItem {
