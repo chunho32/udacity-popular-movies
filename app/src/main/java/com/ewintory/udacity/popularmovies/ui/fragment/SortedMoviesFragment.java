@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.ewintory.udacity.popularmovies.R;
 import com.ewintory.udacity.popularmovies.data.api.Sort;
+import com.ewintory.udacity.popularmovies.data.model.Genre;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.ui.activity.BrowseMoviesActivity;
 import com.ewintory.udacity.popularmovies.ui.activity.MovieDetailsActivity;
@@ -62,7 +63,6 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
 
     private EndlessScrollListener mEndlessScrollListener;
     private BehaviorSubject<Observable<List<Movie>>> mItemsObservableSubject = BehaviorSubject.create();
-
     private Sort mSort;
     private int mGenre = -1;
     private String mGenreName = "noname";
@@ -139,7 +139,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                         }
                     }
                 }));
-            subscribeToMovies();
+        subscribeToGenre();
         if (savedInstanceState == null)
             reloadContent();
     }
@@ -178,6 +178,23 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
         mCurrentAdLoadedID = 0;
         reAddOnScrollListener(mGridLayoutManager, mCurrentPage = 0);
         pullPage(1);
+    }
+
+    private void subscribeToGenre() {
+        Timber.d("Subscribing to genre items");
+        mSubscriptions.add(mGenresRepository.discoveryGenres()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(genres -> {
+                    subscribeToMovies();
+                }, throwable -> {
+                    Timber.e(throwable, "Movies loading failed.");
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    if (mViewAnimator.getDisplayedChildId() == ANIMATOR_VIEW_CONTENT) {
+                        mMoviesAdapter.setLoadMore(false);
+                        Toast.makeText(getActivity(), R.string.view_error_message, Toast.LENGTH_SHORT).show();
+                    } else
+                        mViewAnimator.setDisplayedChildId(ANIMATOR_VIEW_ERROR);
+                }));
     }
 
     private void subscribeToMovies() {
@@ -226,6 +243,8 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                         mViewAnimator.setDisplayedChildId(ANIMATOR_VIEW_ERROR);
                 }));
     }
+
+
     private void setUpAndLoadNativeExpressAds(int currentAdLoadedID) {
         // Use a Runnable to ensure that the RecyclerView has been laid out before setting the
         // ad size for the Native Express ad. This allows us to set the Native Express ad's

@@ -19,10 +19,13 @@ package com.ewintory.udacity.popularmovies.data.repository;
 
 import com.ewintory.udacity.popularmovies.data.api.MoviesApi;
 import com.ewintory.udacity.popularmovies.data.model.Genre;
+import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.data.provider.MoviesContract;
 import com.squareup.sqlbrite.BriteContentResolver;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -41,6 +44,15 @@ final class GenresRepositoryImpl implements GenresRepository {
     public Observable<Map<Integer, Genre>> genres() {
         return mBriteContentResolver.createQuery(MoviesContract.Genres.CONTENT_URI, Genre.PROJECTION, null, null, null, true)
                 .map(Genre.PROJECTION_MAP)
+                .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<List<Genre>> discoveryGenres() {
+        return mMoviesApi.genres()
+                .timeout(5, TimeUnit.SECONDS)
+                .retry(2)
+                .map(response -> response.genres)
                 .subscribeOn(Schedulers.io());
     }
 }

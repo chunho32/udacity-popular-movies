@@ -51,7 +51,7 @@ public final class ApiModule {
                 .setClient(new OkClient(client))
                 .setEndpoint(endpoint)
                 .setLogLevel(RestAdapter.LogLevel.NONE)
-                //.setRequestInterceptor(request -> request.addQueryParam("api_key", BuildConfig.MOVIE_DB_API_KEY))
+                .setRequestInterceptor(request -> request.addQueryParam("api_key", BuildConfig.MOVIE_DB_API_KEY))
                 .setConverter(new GsonConverter(gson))
                 .build();
     }

@@ -35,5 +35,5 @@ import rx.Observable;
 public interface GenresRepository {
 
     Observable<Map<Integer, Genre>> genres();
-
+    Observable<List<Genre>> discoveryGenres();
 }

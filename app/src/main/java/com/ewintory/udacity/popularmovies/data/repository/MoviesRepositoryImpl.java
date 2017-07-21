@@ -50,13 +50,14 @@ final class MoviesRepositoryImpl implements MoviesRepository {
 
     private BehaviorSubject<Set<Long>> mSavedMovieIdsSubject;
     private BehaviorSubject<Map<Integer, Genre>> mGenresSubject;
-
+    private BehaviorSubject<List<Genre>> mGenresListSubject;
     public MoviesRepositoryImpl(MoviesApi moviesApi, ContentResolver contentResolver,
                                 BriteContentResolver briteContentResolver, GenresRepository genresRepository) {
         mGenresRepository = genresRepository;
         mMoviesApi = moviesApi;
         mContentResolver = contentResolver;
         mBriteContentResolver = briteContentResolver;
+        getGenresList();
     }
 
     @Override
@@ -154,6 +155,14 @@ final class MoviesRepositoryImpl implements MoviesRepository {
         return mGenresSubject.asObservable();
     }
 
+    private Observable<List<Genre>> getGenresList() {
+        if (mGenresListSubject == null) {
+            mGenresListSubject = BehaviorSubject.create();
+            mGenresRepository.discoveryGenres().subscribe(mGenresListSubject);
+        }
+        return mGenresListSubject.asObservable();
+    }
+
     private static Func2<List<Movie>, Map<Integer, Genre>, List<Movie>> GENRES_MAPPER = (movies, genreMap) -> {
         for (Movie movie : movies) {
             List<Integer> genreIds = movie.getGenreIds();
@@ -163,6 +172,22 @@ final class MoviesRepositoryImpl implements MoviesRepository {
             for (Integer id : genreIds)
                 if(genreMap.get(id) != null)
                     genres.add(genreMap.get(id));
+            movie.setGenres(genres);
+        }
+        return movies;
+    };
+
+    private static Func2<List<Movie>, List<Genre>, List<Movie>> GENRES_MAPPER2 = (movies, genresList) -> {
+        for (Movie movie : movies) {
+            List<Integer> genreIds = movie.getGenreIds();
+            if (Lists.isEmpty(genreIds)) continue;
+
+            List<Genre> genres = new ArrayList<>();
+            for(Genre genre : genresList) {
+                for (Integer id : genreIds)
+                    if (genre.getId() == id)
+                        genres.add(genre);
+            }
             movie.setGenres(genres);
         }
         return movies;

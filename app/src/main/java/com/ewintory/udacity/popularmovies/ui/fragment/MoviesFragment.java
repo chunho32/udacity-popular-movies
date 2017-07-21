@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import com.ewintory.udacity.popularmovies.R;
 import com.ewintory.udacity.popularmovies.data.api.ApiModule;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
+import com.ewintory.udacity.popularmovies.data.repository.GenresRepository;
 import com.ewintory.udacity.popularmovies.data.repository.MoviesRepository;
 import com.ewintory.udacity.popularmovies.ui.activity.BrowseMoviesActivity;
 import com.ewintory.udacity.popularmovies.ui.activity.MovieDetailsActivity;
@@ -69,6 +70,7 @@ public abstract class MoviesFragment extends BaseFragment implements
     protected static final int ANIMATOR_VIEW_EMPTY = R.id.view_empty;
 
     @Inject MoviesRepository mMoviesRepository;
+    @Inject GenresRepository mGenresRepository;
 
     @Bind(R.id.multi_swipe_refresh_layout) MultiSwipeRefreshLayout mSwipeRefreshLayout;
     @Bind(R.id.movies_animator) BetterViewAnimator mViewAnimator;
