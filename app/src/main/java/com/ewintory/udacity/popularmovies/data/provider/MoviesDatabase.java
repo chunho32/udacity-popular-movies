@@ -28,8 +28,8 @@ import static com.ewintory.udacity.popularmovies.data.provider.MoviesContract.Ge
 import static com.ewintory.udacity.popularmovies.data.provider.MoviesContract.Movies;
 
 final class MoviesDatabase extends SQLiteOpenHelper {
-    private static final String DB_NAME = "movies.db";
-    private static final int DB_VERSION = 1;
+    public static final String DB_NAME = "movies.db";
+    public static final int DB_VERSION = 1;
 
     private final Context mContext;
 

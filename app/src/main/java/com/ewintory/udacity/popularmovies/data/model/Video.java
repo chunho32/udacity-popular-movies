@@ -28,7 +28,7 @@ public final class  Video implements Parcelable {
 
     public static final String SITE_YOUTUBE = "YouTube";
     public static final String TYPE_TRAILER = "Trailer";
-
+    public static final String TYPE_STREAM = "Stream";
     @Expose
     private String id;
     @SerializedName("iso_639_1")

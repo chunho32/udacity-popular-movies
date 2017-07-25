@@ -21,7 +21,7 @@ import timber.log.Timber;
 public final class ImageUtils {
 
     public static final String BASE_URL = "http://image.tmdb.org/t/p";
-
+    //public static final String BASE_URL = "";
     private ImageUtils() {
         throw new AssertionError("No instances.");
     }
@@ -51,6 +51,12 @@ public final class ImageUtils {
             widthPath = "/w780";
 
         //Timber.v("buildPosterUrl: widthPath=" + widthPath);
+        //if(BASE_URL == "")
+        //    return imagePath;
+
+        if(imagePath.contains("http://") || imagePath.contains("https://"))
+            return imagePath;
+
         return BASE_URL + widthPath + imagePath;
     }
 

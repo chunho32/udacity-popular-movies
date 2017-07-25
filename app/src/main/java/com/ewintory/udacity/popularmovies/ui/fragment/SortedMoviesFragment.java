@@ -18,6 +18,8 @@ package com.ewintory.udacity.popularmovies.ui.fragment;
 
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -30,6 +32,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ewintory.udacity.popularmovies.R;
+import com.ewintory.udacity.popularmovies.data.ServerConfig;
+import com.ewintory.udacity.popularmovies.data.api.ApiModule;
 import com.ewintory.udacity.popularmovies.data.api.Sort;
 import com.ewintory.udacity.popularmovies.data.model.Genre;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
@@ -38,12 +42,14 @@ import com.ewintory.udacity.popularmovies.ui.activity.BrowseMoviesActivity;
 import com.ewintory.udacity.popularmovies.ui.activity.MovieDetailsActivity;
 import com.ewintory.udacity.popularmovies.ui.adapter.MoviesAdapter;
 import com.ewintory.udacity.popularmovies.ui.listener.EndlessScrollListener;
+import com.ewintory.udacity.popularmovies.utils.PrefUtils;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.NativeExpressAdView;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -131,6 +137,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
         mViewAnimator.setDisplayedChildId((mCurrentPage == 0) ? ANIMATOR_VIEW_LOADING : ANIMATOR_VIEW_CONTENT);
     }
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -146,7 +153,20 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                         }
                     }
                 }));
-        subscribeToGenre();
+        if(!ApiModule.serverConfig.getServer_url().equals(PrefUtils.getLastServerURL(getContext())))
+        {
+            mContentResolver.delete(MoviesContract.Genres.CONTENT_URI,null,null);
+            mContentResolver.delete(MoviesContract.Movies.CONTENT_URI,null,null);
+            PrefUtils.setLastServerURL(getContext(),ApiModule.serverConfig.getServer_url());
+        }
+        Cursor cursor  = mContentResolver.query(MoviesContract.Genres.CONTENT_URI,Genre.PROJECTION, null, null, null);
+        if(cursor != null && cursor.getCount() > 0) {
+            subscribeToMovies();
+        }else
+        {
+
+            subscribeToGenre();
+        }
         if (savedInstanceState == null)
             reloadContent();
     }

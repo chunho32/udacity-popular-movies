@@ -28,6 +28,7 @@ import android.text.TextUtils;
 
 import com.ewintory.udacity.popularmovies.utils.SelectionBuilder;
 
+import java.io.File;
 import java.util.Arrays;
 
 import timber.log.Timber;
@@ -67,6 +68,15 @@ public final class MoviesProvider extends ContentProvider {
         matcher.addURI(authority, "movies/*/genres", MOVIES_ID_GENRES);
 
         return matcher;
+    }
+
+    public boolean doesDatabaseExist() {
+        File dbFile = getContext().getDatabasePath(MoviesDatabase.DB_NAME);
+        return dbFile.exists();
+    }
+
+    public int getDatabaseVersion() {
+        return mOpenHelper.getReadableDatabase().getVersion();
     }
 
     @Override

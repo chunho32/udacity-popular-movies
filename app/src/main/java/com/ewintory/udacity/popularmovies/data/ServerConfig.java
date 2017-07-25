@@ -10,6 +10,8 @@ public class ServerConfig {
     private boolean in_review;
     private boolean is_active;
 
+    private String poster_base_url;
+
     public boolean is_active() {
         return is_active;
     }

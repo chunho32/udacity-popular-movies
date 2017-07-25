@@ -43,6 +43,8 @@ public final class PrefUtils {
 
     public static final String PREF_INCLUDE_ADULT = "pref_include_adult";
 
+    public static final String LAST_SERVER_URL = "last_server_url";
+
     public static boolean isWelcomeDone(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(PREF_WELCOME_DONE, false);
@@ -103,4 +105,17 @@ public final class PrefUtils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         sp.edit().clear().apply();
     }
+
+    public static String getLastServerURL(final Context context)
+    {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getString(LAST_SERVER_URL, "https://developers.themoviedb.org/3");
+    }
+
+    public static void setLastServerURL(final Context context,String server_url)
+    {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putString(LAST_SERVER_URL, server_url).apply();
+    }
+
 }

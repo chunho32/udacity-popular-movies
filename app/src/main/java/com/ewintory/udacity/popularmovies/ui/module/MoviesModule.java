@@ -31,6 +31,7 @@ import dagger.Module;
                 FavoredMoviesFragment.class,
                 MovieFragment.class,
                 LeftMenuFragment.class
+
         },
         addsTo = ApplicationModule.class
 )
