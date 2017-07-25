@@ -93,7 +93,7 @@ final class MoviesDatabase extends SQLiteOpenHelper {
                 + MoviesGenres.GENRE_ID + " TEXT NOT NULL " + References.GENRE_ID + ","
                 + "UNIQUE (" + MoviesGenres.MOVIE_ID + "," + MoviesGenres.GENRE_ID + ") ON CONFLICT REPLACE)");
 
-        insertGenres(db);
+        //insertGenres(db);
     }
 
     /**
@@ -124,7 +124,12 @@ final class MoviesDatabase extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if(oldVersion != newVersion)
+        {
+
+        }
+    }
 
     public static void deleteDatabase(Context context) {
         context.deleteDatabase(DB_NAME);

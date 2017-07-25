@@ -21,8 +21,10 @@ import com.ewintory.udacity.popularmovies.data.api.MoviesApi;
 import com.ewintory.udacity.popularmovies.data.model.Genre;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
 import com.ewintory.udacity.popularmovies.data.provider.MoviesContract;
+import com.ewintory.udacity.popularmovies.utils.DbUtils;
 import com.squareup.sqlbrite.BriteContentResolver;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;

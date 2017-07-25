@@ -66,7 +66,10 @@ public interface GenreMeta {
             values.put(MoviesContract.GenresColumns.GENRE_NAME, name);
             return this;
         }
-
+        public Builder genre(Genre genre) {
+            return id(genre.getId())
+                   .name(genre.getName());
+        }
         public ContentValues build() {
             return values;
         }

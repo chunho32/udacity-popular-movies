@@ -16,6 +16,8 @@
 
 package com.ewintory.udacity.popularmovies.ui.fragment;
 
+import android.content.AsyncQueryHandler;
+import android.content.ContentResolver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -31,6 +33,7 @@ import com.ewintory.udacity.popularmovies.R;
 import com.ewintory.udacity.popularmovies.data.api.Sort;
 import com.ewintory.udacity.popularmovies.data.model.Genre;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
+import com.ewintory.udacity.popularmovies.data.provider.MoviesContract;
 import com.ewintory.udacity.popularmovies.ui.activity.BrowseMoviesActivity;
 import com.ewintory.udacity.popularmovies.ui.activity.MovieDetailsActivity;
 import com.ewintory.udacity.popularmovies.ui.adapter.MoviesAdapter;
@@ -43,6 +46,8 @@ import com.google.android.gms.ads.NativeExpressAdView;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -58,6 +63,8 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
     private static final String STATE_IS_LOADING = "state_is_loading";
 
     private static final int VISIBLE_THRESHOLD = 10;
+
+    @Inject ContentResolver mContentResolver;
 
     private int mCurrentAdLoadedID = 0;
 
@@ -185,9 +192,16 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
         mSubscriptions.add(mGenresRepository.discoveryGenres()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(genres -> {
+                    for(int i = 0 ; i < genres.size() ; i++) {
+                        AsyncQueryHandler handler = new AsyncQueryHandler(mContentResolver) {
+                        };
+                        handler.startInsert(-1, null, MoviesContract.Genres.CONTENT_URI, new Genre.Builder()
+                                .genre(genres.get(i))
+                                .build());
+                    }
                     subscribeToMovies();
                 }, throwable -> {
-                    Timber.e(throwable, "Movies loading failed.");
+                    Timber.e(throwable, "Genre loading failed.");
                     mSwipeRefreshLayout.setRefreshing(false);
                     if (mViewAnimator.getDisplayedChildId() == ANIMATOR_VIEW_CONTENT) {
                         mMoviesAdapter.setLoadMore(false);
