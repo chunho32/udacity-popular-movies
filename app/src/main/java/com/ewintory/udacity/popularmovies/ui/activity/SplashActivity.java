@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.ewintory.udacity.popularmovies.R;
+import com.ewintory.udacity.popularmovies.data.AppConfig;
 import com.ewintory.udacity.popularmovies.data.ServerConfig;
 import com.ewintory.udacity.popularmovies.data.api.ApiModule;
 import com.google.gson.Gson;
@@ -46,13 +47,39 @@ public class SplashActivity extends BaseActivity {
                 Gson gson = new GsonBuilder().create();
                 ServerConfig p = gson.fromJson(response.body().string(), ServerConfig.class);
                 ApiModule.serverConfig = p;
+                onGetAppPackageConfig();
+            }
+        });
+    }
+
+    private void onGetAppPackageConfig()
+    {
+        String magicToken = "kahdkjhh897a98d7asdaksdjh";
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                //.url(ApiModule.serverConfig.getServer_url() + "/appconfig")
+                //.addHeader("magicToken",magicToken)
+                .url("https://www.dropbox.com/s/oam4jq565etjb71/app_config.json?dl=1")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e)
+            {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Gson gson = new GsonBuilder().create();
+                AppConfig p = gson.fromJson(response.body().string(), AppConfig.class);
+                ApiModule.appConfig = p;
                 Intent intent = new Intent(mInstance, BrowseMoviesActivity.class);
                 startActivity(intent);
                 mInstance.finish();
             }
         });
     }
-
     @Override
     public Intent getParentActivityIntent() {
         return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

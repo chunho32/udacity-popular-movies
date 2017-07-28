@@ -17,6 +17,7 @@
 package com.ewintory.udacity.popularmovies.data.api;
 
 import com.ewintory.udacity.popularmovies.BuildConfig;
+import com.ewintory.udacity.popularmovies.data.AppConfig;
 import com.ewintory.udacity.popularmovies.data.ServerConfig;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
@@ -37,6 +38,7 @@ import retrofit.converter.GsonConverter;
 public final class ApiModule {
 
     public static ServerConfig serverConfig;
+    public static AppConfig appConfig;
 
     @Provides @Singleton Endpoint provideEndpoint() {
         return Endpoints.newFixedEndpoint(serverConfig.getServer_url());
