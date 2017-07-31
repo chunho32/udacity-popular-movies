@@ -1,7 +1,10 @@
 package com.ewintory.udacity.popularmovies.ui.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 
 import com.ewintory.udacity.popularmovies.R;
 import com.ewintory.udacity.popularmovies.data.AppConfig;
@@ -74,12 +77,69 @@ public class SplashActivity extends BaseActivity {
                 Gson gson = new GsonBuilder().create();
                 AppConfig p = gson.fromJson(response.body().string(), AppConfig.class);
                 ApiModule.appConfig = p;
-                Intent intent = new Intent(mInstance, BrowseMoviesActivity.class);
-                startActivity(intent);
-                mInstance.finish();
+                checkForceApp();
             }
         });
     }
+
+    public void checkForceApp()
+    {
+        AppConfig.Force forceConfig = ApiModule.appConfig.getForce();
+        if(forceConfig == null)
+        {
+            Intent intent = new Intent(mInstance, BrowseMoviesActivity.class);
+            startActivity(intent);
+            mInstance.finish();
+            return;
+        }
+
+        String externalLink = forceConfig.getExternal_link();
+        String packageName = forceConfig.getPackage_name();
+        if(externalLink == "" && packageName == "")
+        {
+            Intent intent = new Intent(mInstance, BrowseMoviesActivity.class);
+            startActivity(intent);
+            mInstance.finish();
+            return;
+        }
+
+        SplashActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new AlertDialog.Builder(SplashActivity.this)
+                        .setMessage("New version is available! Update now ?")
+                        .setCancelable(ApiModule.appConfig.getForce().isKeep_current_version())
+                        .setPositiveButton("Update", new DialogInterface
+                                .OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if(packageName != "") {
+                                    try {
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+                                    } catch (android.content.ActivityNotFoundException anfe) {
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
+                                    }
+                                }
+                                else if(externalLink != "") {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(externalLink));
+                                    startActivity(intent);
+                                }
+                                mInstance.finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(mInstance, BrowseMoviesActivity.class);
+                                startActivity(intent);
+                                mInstance.finish();
+                            }
+                        })
+                        .show();
+            }
+        });
+
+    }
+
     @Override
     public Intent getParentActivityIntent() {
         return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

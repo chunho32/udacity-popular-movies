@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright 2015.  Emin Yahyayev
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,9 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
-
-<manifest
-    package="com.ewintory.udacity.popularmovies"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ewintory.udacity.popularmovies">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,45 +24,43 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".PopularMoviesApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.PopularMovies">
-
         <activity
             android:name=".ui.activity.SplashActivity"
             android:label="@string/title_browse_movies"
             android:theme="@style/Theme.PopularMovies.BrowseMovies">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
-
         <activity
             android:name=".ui.activity.BrowseMoviesActivity"
             android:label="@string/title_browse_movies"
-            android:theme="@style/Theme.PopularMovies.BrowseMovies">
-
-        </activity>
-
+            android:theme="@style/Theme.PopularMovies.BrowseMovies" />
         <activity
             android:name=".ui.activity.MovieDetailsActivity"
             android:parentActivityName=".ui.activity.BrowseMoviesActivity"
             android:theme="@style/Theme.PopularMovies.MovieDetails" />
-
         <activity
             android:name=".ui.activity.PreferenceActivity"
             android:label="@string/title_settings"
             android:parentActivityName=".ui.activity.BrowseMoviesActivity" />
-
         <activity
             android:name=".ui.activity.MyPlayerActivity"
-            android:label="Player Activity"
             android:configChanges="orientation|keyboardHidden|screenLayout|screenSize"
-            android:theme="@style/Theme.PopularMovies.MyPlayer" />   <!-- Don't need to set the theme here if it's set on your <application /> tag already -->
+            android:label="Player Activity"
+            android:theme="@style/Theme.PopularMovies.MyPlayer" /> <!-- Don't need to set the theme here if it's set on your <application /> tag already -->
 
         <provider
             android:name=".data.provider.MoviesProvider"
@@ -77,17 +73,18 @@
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-
         <service
             android:name=".data.sync.PopularMoviesSyncService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
@@ -97,6 +94,14 @@
             android:name="com.ewintory.udacity.popularmovies.data.GlideSetup"
             android:value="GlideModule" />
 
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:label="@string/title_activity_login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

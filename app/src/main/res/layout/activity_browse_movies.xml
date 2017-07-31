@@ -32,6 +32,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <FrameLayout android:id="@+id/overlay_update_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
         <com.roughike.bottombar.BottomBar
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"

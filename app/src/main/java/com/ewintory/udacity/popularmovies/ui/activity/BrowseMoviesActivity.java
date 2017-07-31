@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -45,6 +46,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ewintory.udacity.popularmovies.R;
+import com.ewintory.udacity.popularmovies.data.AppConfig;
+import com.ewintory.udacity.popularmovies.data.api.ApiModule;
 import com.ewintory.udacity.popularmovies.data.api.Sort;
 import com.ewintory.udacity.popularmovies.data.model.Genre;
 import com.ewintory.udacity.popularmovies.data.model.Movie;
@@ -53,6 +56,7 @@ import com.ewintory.udacity.popularmovies.ui.fragment.LeftMenuFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.MovieFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.MoviesFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.SortedMoviesFragment;
+import com.ewintory.udacity.popularmovies.ui.fragment.UpdateAppFragment;
 import com.ewintory.udacity.popularmovies.utils.PrefUtils;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.google.android.gms.ads.MobileAds;
@@ -69,6 +73,7 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
     private static final String SORT_MODE = "state_mode";
 
     private static final String MOVIES_FRAGMENT_TAG = "fragment_movies";
+    private static final String UPDATE_APP_FRAGMENT_TAG = "fragment_update";
     private static final String MOVIE_DETAILS_FRAGMENT_TAG = "fragment_movie_details";
     private static final String GENRES_FRAGMENT_TAG = "fragment_genres";
     public static final String MODE_FAVORITES = "favorites";
@@ -157,7 +162,25 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
         //left menu
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         createGenresFragment(new LeftMenuFragment());
+
+        checkPromotion();
     }
+
+    public void checkPromotion()
+    {
+        ArrayList<AppConfig.Promotion> promotions = ApiModule.appConfig.getPromotions();
+        if(promotions != null && promotions.size() > 0) {
+            UpdateAppFragment updateAppFragment = (UpdateAppFragment) getSupportFragmentManager().findFragmentByTag(UPDATE_APP_FRAGMENT_TAG);
+            if (updateAppFragment == null)
+                updateAppFragment = UpdateAppFragment.newInstance(ApiModule.appConfig.getPromotions());
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.overlay_update_container, updateAppFragment, UPDATE_APP_FRAGMENT_TAG)
+                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                    .commit();
+        }
+    }
+
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
