@@ -145,39 +145,40 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
         trySetupToolbar();
         mScrollView.setScrollViewCallbacks(this);
 
-        // Set its video options.
-        mNativeExpressAdview.setVideoOptions(new VideoOptions.Builder()
-                .setStartMuted(true)
-                .build());
+        if(ApiModule.appConfig.is_show_ads()) {
+            // Set its video options.
+            mNativeExpressAdview.setVideoOptions(new VideoOptions.Builder()
+                    .setStartMuted(true)
+                    .build());
 
-        mVideoController = mNativeExpressAdview.getVideoController();
-        mVideoController.setVideoLifecycleCallbacks(new VideoController.VideoLifecycleCallbacks() {
-            @Override
-            public void onVideoEnd() {
-                Log.d("MOVIE_FRAGMENT", "Video playback is finished.");
-                super.onVideoEnd();
-            }
-        });
-
-        mNativeExpressAdview.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                if (mVideoController.hasVideoContent()) {
-                    Log.d("MOVIE_FRAGMENT", "Received an ad that contains a video asset.");
-                } else {
-                    Log.d("MOVIE_FRAGMENT", "Received an ad that does not contain a video asset.");
+            mVideoController = mNativeExpressAdview.getVideoController();
+            mVideoController.setVideoLifecycleCallbacks(new VideoController.VideoLifecycleCallbacks() {
+                @Override
+                public void onVideoEnd() {
+                    Log.d("MOVIE_FRAGMENT", "Video playback is finished.");
+                    super.onVideoEnd();
                 }
+            });
+
+            mNativeExpressAdview.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    if (mVideoController.hasVideoContent()) {
+                        Log.d("MOVIE_FRAGMENT", "Received an ad that contains a video asset.");
+                    } else {
+                        Log.d("MOVIE_FRAGMENT", "Received an ad that does not contain a video asset.");
+                    }
+                }
+            });
+
+            mNativeExpressAdview.loadAd(new AdRequest.Builder().build());
+
+            if (savedInstanceState != null) {
+                mVideos = savedInstanceState.getParcelableArrayList(STATE_VIDEOS);
+                mReviews = savedInstanceState.getParcelableArrayList(STATE_REVIEWS);
+                mScrollView.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_SCROLL_VIEW));
             }
-        });
-
-        mNativeExpressAdview.loadAd(new AdRequest.Builder().build());
-
-        if (savedInstanceState != null) {
-            mVideos = savedInstanceState.getParcelableArrayList(STATE_VIDEOS);
-            mReviews = savedInstanceState.getParcelableArrayList(STATE_REVIEWS);
-            mScrollView.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_SCROLL_VIEW));
         }
-
         if(ApiModule.serverConfig.isIn_review())
         {
             mViewBtn.setVisibility(View.INVISIBLE);
@@ -410,7 +411,7 @@ public final class MovieFragment extends BaseFragment implements ObservableScrol
                 videoNameView.setText(video.getSite() + ": " + video.getName());
                 videoView.setTag(video);
                 videoView.setOnClickListener(v -> {
-                    mHelper.playVideo((Video) v.getTag());
+                    mHelper.playTrailer((Video) v.getTag());
                 });
 
                 mVideosGroup.addView(videoView);

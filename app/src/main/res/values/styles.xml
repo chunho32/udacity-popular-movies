@@ -111,4 +111,14 @@
     </style>
 
 
+    <style name="AppTheme" parent="android:Theme.Light" />
+    <style name="PauseDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/PauseDialogAnimation</item>
+    </style>
+
+    <style name="PauseDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_in_bottom</item>
+    </style>
+
 </resources>

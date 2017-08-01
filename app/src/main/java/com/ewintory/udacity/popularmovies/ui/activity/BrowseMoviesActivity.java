@@ -16,6 +16,7 @@
 
 package com.ewintory.udacity.popularmovies.ui.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,6 +43,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -56,10 +59,8 @@ import com.ewintory.udacity.popularmovies.ui.fragment.LeftMenuFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.MovieFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.MoviesFragment;
 import com.ewintory.udacity.popularmovies.ui.fragment.SortedMoviesFragment;
-import com.ewintory.udacity.popularmovies.ui.fragment.UpdateAppFragment;
 import com.ewintory.udacity.popularmovies.utils.PrefUtils;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.google.android.gms.ads.MobileAds;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -170,13 +171,32 @@ public final class BrowseMoviesActivity extends BaseActivity implements MoviesFr
     {
         ArrayList<AppConfig.Promotion> promotions = ApiModule.appConfig.getPromotions();
         if(promotions != null && promotions.size() > 0) {
-            UpdateAppFragment updateAppFragment = (UpdateAppFragment) getSupportFragmentManager().findFragmentByTag(UPDATE_APP_FRAGMENT_TAG);
-            if (updateAppFragment == null)
-                updateAppFragment = UpdateAppFragment.newInstance(ApiModule.appConfig.getPromotions());
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.overlay_update_container, updateAppFragment, UPDATE_APP_FRAGMENT_TAG)
-                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-                    .commit();
+            final Dialog dialog = new Dialog(BrowseMoviesActivity.this,R.style.PauseDialog);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(false);
+            dialog.setContentView(R.layout.custom_dialog_update);
+
+//            TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
+//            text.setText("New version is available! Update now ?");
+
+            Button dialogCancelButton = (Button) dialog.findViewById(R.id.update_cancel_dialog_btn);
+            dialogCancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+
+                }
+            });
+
+            Button dialogOkButton = (Button) dialog.findViewById(R.id.update_ok_dialog_btn);
+            dialogOkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            dialog.show();
         }
     }
 

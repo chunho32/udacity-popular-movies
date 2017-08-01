@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ewintory.udacity.popularmovies.R;
+import com.ewintory.udacity.popularmovies.data.api.ApiModule;
 import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.common.collect.Interner;
 
@@ -90,7 +91,9 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
         if(isLoadMore(position))
             return VIEW_TYPE_LOAD_MORE;
 
-        if(position >= START_AD_INDEX && ((position - START_AD_INDEX) % ITEMS_PER_AD == 0))
+        if(ApiModule.appConfig.is_show_ads()
+                && position >= START_AD_INDEX
+                && ((position - START_AD_INDEX) % ITEMS_PER_AD == 0))
             return AD_VIEW_TYPE;
 
         return VIEW_TYPE_ITEM;

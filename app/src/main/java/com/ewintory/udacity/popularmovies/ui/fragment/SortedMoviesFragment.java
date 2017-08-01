@@ -247,7 +247,7 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
                     mMoviesAdapter.setLoadMore(!movies.isEmpty());
                     for(int i = 0 ; i < movies.size(); i++)
                     {
-                        if(mMoviesAdapter.getItems().size() >= MoviesAdapter.START_AD_INDEX && ((mMoviesAdapter.getItems().size() - MoviesAdapter.START_AD_INDEX ) % MoviesAdapter.ITEMS_PER_AD == 0))
+                        if(ApiModule.appConfig.is_show_ads() && mMoviesAdapter.getItems().size() >= MoviesAdapter.START_AD_INDEX && ((mMoviesAdapter.getItems().size() - MoviesAdapter.START_AD_INDEX ) % MoviesAdapter.ITEMS_PER_AD == 0))
                         {
                             final NativeExpressAdView adView = new NativeExpressAdView(getActivity());
                             mMoviesAdapter.addAd(mMoviesAdapter.getItems().size(),adView);
@@ -262,7 +262,11 @@ public final class SortedMoviesFragment extends MoviesFragment implements Endles
 
                     mViewAnimator.setDisplayedChildId(ANIMATOR_VIEW_CONTENT);
 
-                    if(!movies.isEmpty() && mCurrentPage >= mMaxPage && !isLoadingAds && mCurrentAdLoadedID < mMoviesAdapter.mAdItems.size())
+                    if(ApiModule.appConfig.is_show_ads()
+                            && !movies.isEmpty()
+                            && mCurrentPage >= mMaxPage
+                            && !isLoadingAds
+                            && mCurrentAdLoadedID < mMoviesAdapter.mAdItems.size())
                     {
                         setUpAndLoadNativeExpressAds(mCurrentAdLoadedID);
                     }

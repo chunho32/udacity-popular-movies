@@ -1,10 +1,13 @@
 package com.ewintory.udacity.popularmovies.ui.activity;
 
-import android.content.DialogInterface;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.ewintory.udacity.popularmovies.R;
 import com.ewintory.udacity.popularmovies.data.AppConfig;
@@ -106,35 +109,46 @@ public class SplashActivity extends BaseActivity {
         SplashActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(SplashActivity.this)
-                        .setMessage("New version is available! Update now ?")
-                        .setCancelable(ApiModule.appConfig.getForce().isKeep_current_version())
-                        .setPositiveButton("Update", new DialogInterface
-                                .OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                if(packageName != "") {
-                                    try {
-                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
-                                    } catch (android.content.ActivityNotFoundException anfe) {
-                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
-                                    }
-                                }
-                                else if(externalLink != "") {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(externalLink));
-                                    startActivity(intent);
-                                }
-                                mInstance.finish();
+
+                final Dialog dialog = new Dialog(SplashActivity.this,R.style.PauseDialog);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(false);
+                dialog.setContentView(R.layout.custom_dialog_force);
+
+                TextView text = (TextView) dialog.findViewById(R.id.text_dialog);
+                text.setText("New version is available! Update now ?");
+
+                Button dialogCancelButton = (Button) dialog.findViewById(R.id.btn_cancel_dialog);
+                dialogCancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(mInstance, BrowseMoviesActivity.class);
+                        startActivity(intent);
+                        mInstance.finish();
+                    }
+                });
+
+                Button dialogOkButton = (Button) dialog.findViewById(R.id.btn_ok_dialog);
+                dialogOkButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(packageName != "") {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
                             }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(mInstance, BrowseMoviesActivity.class);
-                                startActivity(intent);
-                                mInstance.finish();
-                            }
-                        })
-                        .show();
+                        }
+                        else if(externalLink != "") {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(externalLink));
+                            startActivity(intent);
+                        }
+                        mInstance.finish();
+                    }
+                });
+
+                dialog.show();
             }
         });
 

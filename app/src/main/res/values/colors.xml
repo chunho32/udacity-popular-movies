@@ -21,7 +21,7 @@
     <color name="body_text_1">#de000000</color>
     <color name="body_text_2">#8a000000</color>
     <color name="body_text_3">#60000000</color>
-    <color name="body_text_white">#FFFFFFFF</color>
+    <color name="body_text_white">#ffffff</color>
     <color name="body_text_disabled">#44000000</color>
 
     <color name="body_text_1_inverse">#deffffff</color>
@@ -45,7 +45,7 @@
     <color name="movie_cover_placeholder">@color/material_bluegrey700</color>
 
     <color name="card_selectable_pressed">@color/theme_primary</color>
-    <color name="card_shape_background">#1e000000</color>
+    <color name="card_shape_background">#a6000000</color>
     <color name="list_dropdown_divider_color">#4a9ad6bc</color>
     <color name="list_dropdown_foreground_normal">#0a0b0b</color>
     <color name="list_dropdown_foreground_selected">#879696</color>
